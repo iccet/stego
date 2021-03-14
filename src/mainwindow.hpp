@@ -4,7 +4,11 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QDebug>
+#include <QBuffer>
+#include <QRgb>
 #include <QImageReader>
+
+#include "kutter.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,5 +27,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    Kutter *kutter;
 };
 #endif // MAINWINDOW_HPP
