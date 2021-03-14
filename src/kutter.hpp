@@ -7,25 +7,16 @@
 #include <QColor>
 #include <QBitArray>
 
-class Kutter : public QObject
+#include "abstractencoder.hpp"
+
+class Kutter : public QObject, public AbstractEncoder
 {
     Q_OBJECT
 public:
     explicit Kutter(QObject *parent = nullptr);
 
-    /**
-     * Encode a raw data.
-     *
-     * @param array Container whose values are encoded.
-     */
-    void encode(QByteArray &array);
-    void encode(QRgb *data, int size);
-
-private:
-    /**
-     * @href https://wiki.qt.io/Working_with_Raw_Data
-     */
-    QBitArray raw(QByteArray &array);
+    void encode(QString data, QByteArray &container) override;
+    void encode(QString data, QRgb *container, int size) override;
 };
 
 #endif // KUTTER_HPP

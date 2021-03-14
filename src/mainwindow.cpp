@@ -4,7 +4,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , kutter()
+    , encoder(new Lsb)
 {
     ui->setupUi(this);
 }
@@ -16,7 +16,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionLoad_triggered()
 {
-    auto name = QFileDialog::getOpenFileName(this, "Select file", QDir::homePath());
+    auto name = QFileDialog::getOpenFileName(this, "Select file", QStandardPaths::writableLocation(QStandardPaths::DownloadLocation));
     QFile file(name);
 
     QImageReader reader(name);
@@ -29,16 +29,16 @@ void MainWindow::on_actionLoad_triggered()
     QRgb *bits = (QRgb *) image.bits();
     int count = image.width() * image.height();
 
-    QByteArray array = QByteArray::fromRawData(reinterpret_cast<const char*>(bits), count);
-    QBuffer buffer(&array);
-    buffer.open(QIODevice::WriteOnly);
-    image.save(&buffer, format);
+    QByteArray array = QByteArray::fromRawData((const char*)bits, count);
+//    QBuffer buffer(&array);
+//    buffer.open(QIODevice::WriteOnly);
+//    image.save(&buffer, format);
 
-    kutter->encode(bits, count);
-//    kutter->encode(arr);
+    encoder->encode("test", bits, count);
+    encoder->encode("test", array);
 
-//    for (quint64 p = 0; p < count; p++) {
-//        bits[p] = (QRgb)arr.at(p);
+//    for (int p = 0; p < count; p++) {
+//        bits[p] = (QRgb)array.at(p);
 //    }
 
     if(image.save("encoded.png"))

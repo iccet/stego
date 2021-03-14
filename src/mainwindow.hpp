@@ -7,8 +7,11 @@
 #include <QBuffer>
 #include <QRgb>
 #include <QImageReader>
+#include <QStandardPaths>
 
 #include "kutter.hpp"
+#include "lsb.hpp"
+#include "abstractencoder.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,6 +30,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    Kutter *kutter;
+    AbstractEncoder *encoder;
 };
 #endif // MAINWINDOW_HPP
