@@ -43,6 +43,8 @@ void MainWindow::on_actionLoad_triggered()
 
     if(image.save("encoded.png"))
         qDebug() << "Successfully saved";
+
+    qDebug() << encoder->decode(bits, count);
 }
 
 

@@ -16,16 +16,33 @@ public:
     /**
      * Encode a raw data.
      *
-     * @param container Container whose values are encoded.
+     * @param data
+     * @param container
      */
     virtual void encode(QString data, QByteArray &container) = 0;
+
+    /**
+     * Encode a raw data.
+     *
+     * @param data
+     * @param container
+     * @param size
+     */
     virtual void encode(QString data, QRgb *container, int size) = 0;
 
-private:
+    /**
+     * Decode a raw data.
+     *
+     * @param container
+     */
+    virtual QByteArray decode(QRgb *container, int size) = 0;
+
+protected:
     /**
      * @href https://wiki.qt.io/Working_with_Raw_Data
      */
-    QBitArray raw(QByteArray &array);
+    QBitArray toBitArray(QByteArray &array);
+    QByteArray toByteArray(QBitArray &array);
 
 };
 

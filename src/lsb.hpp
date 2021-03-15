@@ -12,6 +12,7 @@ public:
 
     void encode(QString data, QByteArray &container) override;
     void encode(QString data, QRgb *container, int size) override;
+    QByteArray decode(QRgb *container, int size) override;
 };
 
 #endif // LSB_HPP
