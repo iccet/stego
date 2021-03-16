@@ -29,21 +29,16 @@ void MainWindow::on_actionLoad_triggered()
     QRgb *bits = (QRgb *) image.bits();
     int count = image.width() * image.height();
 
-    QByteArray array = QByteArray::fromRawData((const char*)bits, count);
 //    QBuffer buffer(&array);
 //    buffer.open(QIODevice::WriteOnly);
 //    image.save(&buffer, format);
 
-    encoder->encode("test", bits, count);
-    encoder->encode("test", array);
-
-//    for (int p = 0; p < count; p++) {
-//        bits[p] = (QRgb)array.at(p);
-//    }
+    encoder->encode("test", bits, 100);
 
     if(image.save("encoded.png"))
         qDebug() << "Successfully saved";
 
+    qDebug() << encoder->decode(bits, count);
     qDebug() << encoder->decode(bits, count);
 }
 

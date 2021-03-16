@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(stego)
+project(Stego)
 
 set(SOURCE_DIR "${PROJECT_SOURCE_DIR}/src")
 set(TESTS_DIR "${PROJECT_SOURCE_DIR}/tests")

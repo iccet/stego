@@ -37,6 +37,14 @@ public:
      */
     virtual QByteArray decode(QRgb *container, int size) = 0;
 
+    /**
+     * Decode a raw data.
+     *
+     * @param container
+     */
+    virtual QByteArray decode(QByteArray &container) = 0;
+
+
 protected:
     /**
      * @href https://wiki.qt.io/Working_with_Raw_Data
@@ -45,5 +53,7 @@ protected:
     QByteArray toByteArray(QBitArray &array);
 
 };
+
+Q_DECLARE_INTERFACE(AbstractEncoder, "encoder")
 
 #endif // ABSTRACTENCODER_HPP

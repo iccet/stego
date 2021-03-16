@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(TemplateTestCase LANGUAGES CXX)
+project(LsbTestCase LANGUAGES CXX)
 
-find_package(Qt5Test REQUIRED)
+find_package(Qt5 COMPONENTS Test Core Gui REQUIRED)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -17,8 +17,12 @@ enable_testing()
 file(GLOB TEST_FILES "${PROJECT_SOURCE_DIR}/*.txt")
 file(COPY ${TEST_FILES} DESTINATION ${PROJECT_BINARY_DIR})
 
-add_executable(${PROJECT_NAME} tst_testcase.cpp)
+include_directories(../../src)
+add_executable(${PROJECT_NAME} tst_lsbtestcase.cpp
+../../src/abstractencoder.cpp
+../../src/lsb.cpp
+)
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Test)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Test Qt5::Core Qt5::Gui)
 
