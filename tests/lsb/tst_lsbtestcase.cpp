@@ -96,7 +96,7 @@ void LsbTestCase::decodingTestCase()
     auto actual = _encoder->decode(_container);
     qDebug() << actual;
 
-    QCOMPARE(actual, _data);
+    QCOMPARE(QString(actual), _data);
 }
 
 void LsbTestCase::cleanupTestCase()

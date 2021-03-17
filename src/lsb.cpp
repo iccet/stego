@@ -38,13 +38,14 @@ QByteArray Lsb::decode(QRgb *container, int size)
 
 QByteArray Lsb::decode(QByteArray &container)
 {
-    QByteArray bytes(container.count(), 0);
+    QBitArray bits(container.count() * 8);
 
     for(int i = 0; i < container.count(); i++)
     {
-        bytes[i] = container[i];
-
+        const int index = i * sizeof(QRgb) - 2;
+        bits[i] = container[index];
     }
-    return container;
+
+    return toByteArray(bits);
 }
 
