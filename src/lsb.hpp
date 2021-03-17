@@ -2,6 +2,8 @@
 #define LSB_HPP
 
 #include <QObject>
+
+#include "bits.hpp"
 #include "abstractencoder.hpp"
 
 class Lsb : public QObject, public AbstractEncoder
@@ -15,6 +17,7 @@ public:
 
     void encode(QString data, QByteArray &container) override;
     void encode(QString data, QRgb *container, int size) override;
+
     QByteArray decode(QRgb *container, int size) override;
     QByteArray decode(QByteArray &container) override;
 };

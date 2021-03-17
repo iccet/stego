@@ -10,10 +10,13 @@ void Lsb::encode(QString data, QByteArray &container)
     auto bytes = data.toLocal8Bit();
     auto bits = toBitArray(bytes);
 
-    Q_ASSERT(bits.count() < container.count() * 8);
+    Q_ASSERT(bits.count() < container.count() * sizeof(QRgb));
 
     for(int i = 0; i < bits.count(); i++)
-        container[(int)(i * sizeof(QRgb) - 1)] = container.at(i * sizeof(QRgb) - 1) | bits.at(i);
+    {
+        const int index = i * sizeof(QRgb) - 2;
+        container[index] = changeBit(container[index], bits[i]);
+    }
 }
 
 void Lsb::encode(QString data, QRgb *container, int size)
@@ -24,22 +27,24 @@ void Lsb::encode(QString data, QRgb *container, int size)
     Q_ASSERT(bits.count() < size);
 
     for(int i = 0; i < bits.count(); i++)
-        container[i] |= bits[i];
+        container[i] = changeBit(container[i], bits[i]);
 }
 
 QByteArray Lsb::decode(QRgb *container, int size)
 {
-    QByteArray bytes(100, 0);
-
-    for(int i = 0; i < 100; i++)
-    {
-//        bytes[i / 8] = (bytes.at(i / 8) | ((container[i] ? 1 : 0) << (7- (i % 8))));;
-        bytes[i] = container[i];
-
-    }
+    QByteArray bytes(size, 0);
+    return bytes;
 }
 
 QByteArray Lsb::decode(QByteArray &container)
 {
+    QByteArray bytes(container.count(), 0);
+
+    for(int i = 0; i < container.count(); i++)
+    {
+        bytes[i] = container[i];
+
+    }
+    return container;
 }
 

@@ -21,6 +21,7 @@ include_directories(../../src)
 add_executable(${PROJECT_NAME} tst_lsbtestcase.cpp
 ../../src/abstractencoder.cpp
 ../../src/lsb.cpp
+../../src/bits.cpp
 )
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 

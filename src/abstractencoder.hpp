@@ -46,12 +46,6 @@ public:
 
 
 protected:
-    /**
-     * @href https://wiki.qt.io/Working_with_Raw_Data
-     */
-    QBitArray toBitArray(QByteArray &array);
-    QByteArray toByteArray(QBitArray &array);
-
 };
 
 Q_DECLARE_INTERFACE(AbstractEncoder, "encoder")
