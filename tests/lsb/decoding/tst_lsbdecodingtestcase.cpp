@@ -7,13 +7,9 @@ class LsbDecodingTestCase : public QObject
 {
     Q_OBJECT
 
-    QString _current_path = QDir::currentPath();
     Lsb *_encoder;
     QByteArray _container;
     QString _data;
-
-    const QByteArray Empty = QByteArray(100, 0);
-    const QByteArray Filled = QByteArray(100, 0xf1);
 
 public:
     LsbDecodingTestCase() = default;
@@ -36,6 +32,7 @@ void LsbDecodingTestCase::initTestCase_data() {
 
     QTest::newRow("Small string") << "test";
     QTest::newRow("Single char") << "p";
+    QTest::newRow("Phrase") << "Hello world!";
 }
 
 void LsbDecodingTestCase::initTestCase() {
@@ -46,9 +43,6 @@ void LsbDecodingTestCase::init() {
     QFETCH_GLOBAL(QString, data);
     QFETCH(QByteArray, container);
 
-    qDebug() << "Data :" << data;
-//    qDebug() << "Container:" << container;
-
     _data = data;
     _encoder->encode(_data, container);
     _container = container;
@@ -58,16 +52,14 @@ void LsbDecodingTestCase::decodingTestCase_data()
 {
     QTest::addColumn<QByteArray>("container");
 
-    QTest::newRow("Empty encoded container") << Empty;
-//    QTest::newRow("Filled encoded container") << Filled;
+    QTest::newRow("Empty encoded container") << QByteArray(1000, 0);
+    QTest::newRow("Filled encoded container") << QByteArray(100, 0xf1);
 }
 
 void LsbDecodingTestCase::decodingTestCase()
 {
     auto actual = _encoder->decode(_container);
-    qDebug() << actual;
-
-    QCOMPARE(QString(actual), _data);
+    QCOMPARE(QString::fromUtf8(actual), _data);
 }
 
 void LsbDecodingTestCase::cleanupTestCase()

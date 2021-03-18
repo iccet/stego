@@ -13,7 +13,7 @@ QBitArray toBitArray(QByteArray &array)
 
 QByteArray toByteArray(QBitArray &array)
 {
-    QByteArray bytes(array.count(), 0);
+    QByteArray bytes(array.count() / 8, 0);
 
     for(int i = 0; i < array.count(); ++i)
         bytes[i / 8] = (bytes.at(i / 8) | ((array[i] ? 1 : 0) << (7 - (i % 8))));

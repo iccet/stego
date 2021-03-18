@@ -2,6 +2,7 @@
 #define LSB_HPP
 
 #include <QObject>
+#include <QDataStream>
 
 #include "bits.hpp"
 #include "abstractencoder.hpp"
@@ -18,8 +19,8 @@ public:
     void encode(QString data, QByteArray &container) override;
     void encode(QString data, QRgb *container, int size) override;
 
-    QByteArray decode(QRgb *container, int size) override;
-    QByteArray decode(QByteArray &container) override;
+    QByteArray decode(const QRgb *container, int size) override;
+    QByteArray decode(const QByteArray &container) override;
 };
 
 #endif // LSB_HPP

@@ -35,14 +35,14 @@ public:
      *
      * @param container
      */
-    virtual QByteArray decode(QRgb *container, int size) = 0;
+    virtual QByteArray decode(const QRgb *container, int size) = 0;
 
     /**
      * Decode a raw data.
      *
      * @param container
      */
-    virtual QByteArray decode(QByteArray &container) = 0;
+    virtual QByteArray decode(const QByteArray &container) = 0;
 
 
 protected:

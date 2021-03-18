@@ -7,7 +7,6 @@ class LsbEncodingTestCase : public QObject
 {
     Q_OBJECT
 
-    QString _current_path = QDir::currentPath();
     Lsb *_encoder;
     QByteArray _container;
     QString _data;
@@ -33,6 +32,7 @@ void LsbEncodingTestCase::initTestCase_data() {
 
     QTest::newRow("Small string") << "test";
     QTest::newRow("Single char") << "p";
+    QTest::newRow("Phrase") << "Hello world";
 }
 
 void LsbEncodingTestCase::initTestCase() {
@@ -42,9 +42,6 @@ void LsbEncodingTestCase::initTestCase() {
 void LsbEncodingTestCase::init() {
     QFETCH_GLOBAL(QString, data);
     QFETCH(QByteArray, container);
-
-    qDebug() << "Data :" << data;
-    qDebug() << "Container:" << container;
 
     _data = data;
     _container = container;

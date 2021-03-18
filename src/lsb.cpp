@@ -7,7 +7,9 @@ Lsb::Lsb(QObject *parent) : QObject(parent)
 
 void Lsb::encode(QString data, QByteArray &container)
 {
-    auto bytes = data.toLocal8Bit();
+    QByteArray bytes;
+    QDataStream stream(&bytes, QIODevice::WriteOnly);
+    stream << data.toLocal8Bit();
     auto bits = toBitArray(bytes);
 
     Q_ASSERT(bits.count() < container.count() * sizeof(QRgb));
@@ -17,35 +19,49 @@ void Lsb::encode(QString data, QByteArray &container)
         const int index = i * sizeof(QRgb) - 2;
         container[index] = changeBit(container[index], bits[i]);
     }
-    qDebug() << bits;
 }
 
 void Lsb::encode(QString data, QRgb *container, int size)
 {
-    auto bytes = data.toLocal8Bit();
-    auto bits = toBitArray(bytes);
+    QByteArray bytes = QByteArray::fromRawData((const char*)container, size);
+    encode(data, bytes);
 
-    Q_ASSERT(bits.count() < size);
-
-    for(int i = 0; i < bits.count(); i++)
-        container[i] = changeBit(container[i], bits[i]);
+    int i = 0;
+    foreach(auto byte, bytes)
+    {
+        container[i++] = byte;
+    }
 }
 
-QByteArray Lsb::decode(QRgb *container, int size)
+QByteArray Lsb::decode(const QRgb *container, int size)
 {
-    QByteArray bytes(size, 0);
-    return bytes;
+    QByteArray bytes = QByteArray::fromRawData((const char*)container, size);
+    return decode(bytes);
 }
 
-QByteArray Lsb::decode(QByteArray &container)
+QByteArray Lsb::decode(const QByteArray &container)
 {
     QBitArray bits(container.count() * 8);
+    QByteArray bytes = container.mid(1 << 7);
+    QBitArray len(sizeof(QRgb) * 8);
 
-    for(int i = 0; i < container.count(); i++)
+    auto f = [](int length, QBitArray &bits, const QByteArray &bytes)
     {
-        const int index = i * sizeof(QRgb) - 2;
-        bits[i] = container[index];
-    }
+        for(int i = 0; i < length; i++)
+        {
+            int index = i * sizeof(QRgb) - 2;
+            bits[i] = bytes[index] & 1;
+        }
+    };
+
+    f(len.count(), len, container);
+
+    bool ok;
+    int length = toByteArray(len)
+            .toHex().toInt(&ok, 16) * 8;
+
+    if(!ok) qWarning() << "Bad message length";
+    f(length, bits, bytes);
 
     return toByteArray(bits);
 }
