@@ -17,6 +17,7 @@ void Lsb::encode(QString data, QByteArray &container)
         const int index = i * sizeof(QRgb) - 2;
         container[index] = changeBit(container[index], bits[i]);
     }
+    qDebug() << bits;
 }
 
 void Lsb::encode(QString data, QRgb *container, int size)
