@@ -22,9 +22,6 @@ private slots:
     void encodingTestCase_data();
     void encodingTestCase();
 
-    void errorTestCase_data();
-    void errorTestCase();
-
     void cleanupTestCase();
 };
 
@@ -59,25 +56,6 @@ void LsbEncodingTestCase::encodingTestCase()
     QFETCH(QByteArray, container);
     QVERIFY(_encoder->encode(data, container));
     QVERIFY(container.count());
-}
-
-void LsbEncodingTestCase::errorTestCase_data()
-{
-    QTest::addColumn<QString>("data");
-    QTest::addColumn<QByteArray>("container");
-    QTest::addColumn<bool>("success");
-
-    QTest::newRow("Huge string") << "Hello world" << QByteArray(100, 0) << false;
-
-}
-
-void LsbEncodingTestCase::errorTestCase()
-{
-    QFETCH(QString, data);
-    QFETCH(QByteArray, container);
-    QFETCH(bool, success);
-
-    QCOMPARE(success, _encoder->encode(data, container));
 }
 
 void LsbEncodingTestCase::cleanupTestCase()

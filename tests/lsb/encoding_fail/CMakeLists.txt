@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(LsbDecodingTestCase LANGUAGES CXX)
+project(LsbEncodingFailTestCase LANGUAGES CXX)
 
 find_package(Qt5 COMPONENTS Test Core Gui REQUIRED)
 
@@ -16,8 +16,7 @@ enable_testing()
 
 file(COPY ${TEST_FILES} DESTINATION ${PROJECT_BINARY_DIR})
 
-include_directories(../../src)
-add_executable(${PROJECT_NAME} tst_lsbdecodingtestcase.cpp
+add_executable(${PROJECT_NAME} tst_lsbencodingfailtestcase.cpp
 ../../../src/abstractencoder.cpp
 ../../../src/lsb.cpp
 ../../../src/bits.cpp
