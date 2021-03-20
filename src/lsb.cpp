@@ -32,10 +32,11 @@ bool Lsb::encode(QString data, QRgb *container, int size)
     QByteArray bytes = QByteArray::fromRawData((const char*)container, size);
     if(!encode(data, bytes)) return 0;
 
-    int i = 0;
-    foreach(auto byte, bytes)
+    bool ok;
+    for (int i = 0; i <= size; i++)
     {
-        container[i++] = byte;
+        QColor color(bytes.mid(i*4, 1).toHex().toInt(&ok, 16), bytes.mid(i*4 + 1, 1).toHex().toInt(&ok, 16), bytes.mid(i*4 + 2, 1).toHex().toInt(&ok, 16), bytes.mid(i*4 + 3, 1).toHex().toInt(&ok, 16));
+        container[i] = color.rgba();
     }
     return 1;
 }
