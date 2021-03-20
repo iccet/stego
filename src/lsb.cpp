@@ -5,32 +5,39 @@ Lsb::Lsb(QObject *parent) : QObject(parent)
 
 }
 
-void Lsb::encode(QString data, QByteArray &container)
+bool Lsb::encode(QString data, QByteArray &container)
 {
     QByteArray bytes;
     QDataStream stream(&bytes, QIODevice::WriteOnly);
     stream << data.toLocal8Bit();
     auto bits = toBitArray(bytes);
 
-    Q_ASSERT(bits.count() < container.count() * sizeof(QRgb));
+    if(container.count() < channel(bits.count()))
+    {
+        qWarning() << "Container is too small";
+        return 0;
+    }
 
     for(int i = 0; i < bits.count(); i++)
     {
-        const int index = i * sizeof(QRgb) - 2;
+        int index = channel(i);
         container[index] = changeBit(container[index], bits[i]);
     }
+
+    return 1;
 }
 
-void Lsb::encode(QString data, QRgb *container, int size)
+bool Lsb::encode(QString data, QRgb *container, int size)
 {
     QByteArray bytes = QByteArray::fromRawData((const char*)container, size);
-    encode(data, bytes);
+    if(!encode(data, bytes)) return 0;
 
     int i = 0;
     foreach(auto byte, bytes)
     {
         container[i++] = byte;
     }
+    return 1;
 }
 
 QByteArray Lsb::decode(const QRgb *container, int size)
@@ -41,15 +48,15 @@ QByteArray Lsb::decode(const QRgb *container, int size)
 
 QByteArray Lsb::decode(const QByteArray &container)
 {
-    QBitArray bits(container.count() * 8);
+    QBitArray bits((container.count() - sizeof(QRgb)) * 8);
     QByteArray bytes = container.mid(1 << 7);
     QBitArray len(sizeof(QRgb) * 8);
 
-    auto f = [](int length, QBitArray &bits, const QByteArray &bytes)
+    auto f = [this](int length, QBitArray &bits, const QByteArray &bytes)
     {
         for(int i = 0; i < length; i++)
         {
-            int index = i * sizeof(QRgb) - 2;
+            int index = channel(i);
             bits[i] = bytes[index] & 1;
         }
     };
@@ -64,5 +71,10 @@ QByteArray Lsb::decode(const QByteArray &container)
     f(length, bits, bytes);
 
     return toByteArray(bits);
+}
+
+int Lsb::channel(int bitIndex)
+{
+    return (bitIndex + 1) * sizeof(QRgb) - 2;
 }
 

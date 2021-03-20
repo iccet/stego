@@ -19,7 +19,7 @@ public:
      * @param data
      * @param container
      */
-    virtual void encode(QString data, QByteArray &container) = 0;
+    virtual bool encode(QString data, QByteArray &container) = 0;
 
     /**
      * Encode a raw data.
@@ -28,7 +28,7 @@ public:
      * @param container
      * @param size
      */
-    virtual void encode(QString data, QRgb *container, int size) = 0;
+    virtual bool encode(QString data, QRgb *container, int size) = 0;
 
     /**
      * Decode a raw data.

@@ -32,7 +32,8 @@ void LsbDecodingTestCase::initTestCase_data() {
 
     QTest::newRow("Small string") << "test";
     QTest::newRow("Single char") << "p";
-    QTest::newRow("Phrase") << "Hello world!";
+    QTest::newRow("Phrase unicode") << "Hello world!";
+    QTest::newRow("Phrase utf-8") << QString::fromUtf8("Привет мир");
 }
 
 void LsbDecodingTestCase::initTestCase() {
@@ -53,13 +54,13 @@ void LsbDecodingTestCase::decodingTestCase_data()
     QTest::addColumn<QByteArray>("container");
 
     QTest::newRow("Empty encoded container") << QByteArray(1000, 0);
-    QTest::newRow("Filled encoded container") << QByteArray(100, 0xf1);
+    QTest::newRow("Filled encoded container") << QByteArray(1000, 0xf1);
 }
 
 void LsbDecodingTestCase::decodingTestCase()
 {
     auto actual = _encoder->decode(_container);
-    QCOMPARE(QString::fromUtf8(actual), _data);
+    QCOMPARE(QString(actual), _data);
 }
 
 void LsbDecodingTestCase::cleanupTestCase()
