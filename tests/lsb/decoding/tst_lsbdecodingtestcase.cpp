@@ -1,7 +1,7 @@
 #include <QtTest>
 
-#include "../../../src/abstractencoder.hpp"
-#include "../../../src/lsb.hpp"
+#include "stego/abstractencoder.hpp"
+#include "stego/lsb.hpp"
 
 class LsbDecodingTestCase : public QObject
 {

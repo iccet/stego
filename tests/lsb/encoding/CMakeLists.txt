@@ -14,14 +14,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 enable_testing()
 
-file(COPY ${TEST_FILES} DESTINATION ${PROJECT_BINARY_DIR})
-
-add_executable(${PROJECT_NAME} tst_lsbencodingtestcase.cpp
-../../../src/abstractencoder.cpp
-../../../src/lsb.cpp
-../../../src/bits.cpp
-)
+add_executable(${PROJECT_NAME} tst_lsbencodingtestcase.cpp)
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Test Qt5::Core Qt5::Gui)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Test Qt5::Core Qt5::Gui libstego)
 

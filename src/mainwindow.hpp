@@ -9,9 +9,9 @@
 #include <QImageReader>
 #include <QStandardPaths>
 
-#include "kutter.hpp"
-#include "lsb.hpp"
-#include "abstractencoder.hpp"
+#include "stego/kutter.hpp"
+#include "stego/lsb.hpp"
+#include "stego/abstractencoder.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
