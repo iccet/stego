@@ -58,11 +58,16 @@ void LsbRawDecodingTestCase::imageTestCase()
     QFETCH_GLOBAL(QString, data);
     QFETCH(QImage, image);
 
-    QRgb *bits = (QRgb *) image.bits();
+    auto *bits = image.bits();
     int count = image.width() * image.height();
 
     QVERIFY(count);
     QVERIFY(_encoder->encode(data, bits, count));
+    QBENCHMARK
+    {
+        auto actual = _encoder->decode(bits, count);
+        QCOMPARE(QString(actual), data);
+    }
 }
 
 void LsbRawDecodingTestCase::cleanupTestCase()

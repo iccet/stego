@@ -27,21 +27,22 @@ bool Lsb::encode(QString data, QByteArray &container)
     return 1;
 }
 
-bool Lsb::encode(QString data, QRgb *container, int size)
+bool Lsb::encode(QString data, uchar *container, int size)
 {
-    QByteArray bytes = QByteArray::fromRawData((const char*)container, size);
+    QByteArray bytes = QByteArray::fromRawData((const char *)container, size);
     if(!encode(data, bytes)) return 0;
 
-    bool ok;
-    for (int i = 0; i <= size; i++)
+    int i = 0;
+    foreach(auto byte, bytes)
     {
-        QColor color(bytes.mid(i*4, 1).toHex().toInt(&ok, 16), bytes.mid(i*4 + 1, 1).toHex().toInt(&ok, 16), bytes.mid(i*4 + 2, 1).toHex().toInt(&ok, 16), bytes.mid(i*4 + 3, 1).toHex().toInt(&ok, 16));
-        container[i] = color.rgba();
+        container[i++] = byte;
     }
+
     return 1;
+
 }
 
-QByteArray Lsb::decode(const QRgb *container, int size)
+QByteArray Lsb::decode(const uchar *container, int size)
 {
     QByteArray bytes = QByteArray::fromRawData((const char*)container, size);
     return decode(bytes);
@@ -68,7 +69,12 @@ QByteArray Lsb::decode(const QByteArray &container)
     int length = toByteArray(len)
             .toHex().toInt(&ok, 16) * 8;
 
-    if(!ok) qWarning() << "Bad message length";
+    if(!ok)
+    {
+        qWarning() << "Bad message length";
+        return QByteArray();
+    }
+
     f(length, bits, bytes);
 
     return toByteArray(bits);

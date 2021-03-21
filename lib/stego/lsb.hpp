@@ -20,9 +20,9 @@ public:
     virtual ~Lsb() = default;
 
     bool encode(QString data, QByteArray &container) override;
-    bool encode(QString data, QRgb *container, int size) override;
+    bool encode(QString data, uchar *container, int size) override;
 
-    QByteArray decode(const QRgb *container, int size) override;
+    QByteArray decode(const uchar *container, int size) override;
     QByteArray decode(const QByteArray &container) override;
 };
 

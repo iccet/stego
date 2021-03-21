@@ -16,7 +16,7 @@ public:
     explicit Kutter(QObject *parent = nullptr);
 
     bool encode(QString data, QByteArray &container) override;
-    bool encode(QString data, QRgb *container, int size) override;
+    bool encode(QString data, uchar *container, int size) override;
 };
 
 #endif // KUTTER_HPP

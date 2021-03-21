@@ -26,15 +26,16 @@ void MainWindow::on_actionLoad_triggered()
     auto format = reader.format();
     QImage image = reader.read();
 
-    QRgb *bits = (QRgb *) image.bits();
+    auto *bits =  image.bits();
     int count = image.width() * image.height();
 
-    encoder->encode("test", bits, 100);
+    if(encoder->encode("hello world", bits, count))
+        qDebug() << "Successfully encoded";
 
     if(image.save("encoded.png"))
         qDebug() << "Successfully saved";
 
-    qDebug() << encoder->decode(bits, 100);
+    qDebug() << QString(encoder->decode(bits, count));
 }
 
 
