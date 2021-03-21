@@ -26,11 +26,16 @@ private slots:
 };
 
 void LsbRawDecodingTestCase::initTestCase_data() {
+    Q_INIT_RESOURCE(data);
     QTest::addColumn<QString>("data");
 
     QTest::newRow("Small string") << "test";
     QTest::newRow("Single char") << "p";
     QTest::newRow("Phrase") << "Hello world";
+
+    auto file = QFile(":txt/regular.txt");
+    file.open(QIODevice::ReadOnly);
+    QTest::newRow("Text") << QString(file.readAll());
 }
 
 void LsbRawDecodingTestCase::initTestCase() {
@@ -43,11 +48,11 @@ void LsbRawDecodingTestCase::init()
 
 void LsbRawDecodingTestCase::imageTestCase_data()
 {
-    Q_INIT_RESOURCE(data);
     QTest::addColumn<QImage>("image");
 
     QDirIterator it(":jpg", QDirIterator::Subdirectories);
-    while (it.hasNext()) {
+    while (it.hasNext())
+    {
         auto file = it.next();
         QTest::newRow(QString("Jpg %1").arg(it.fileName()).toLocal8Bit()) << QImage(file);
     }
