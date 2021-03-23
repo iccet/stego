@@ -1,0 +1,53 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+    types: [opened, reopened]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        os: [ubuntu-latest]
+        compiler: [ GCC, Clang ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v2
+        with:
+          path: ${{ runner.workspace }}/Qt
+          key: ${{ runner.os }}-QtCache
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+
+      - name: Create Build Environment
+        run: cmake -E make_directory ${{github.workspace}}/build
+
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}/build
+        run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        run: cmake --build . --config $BUILD_TYPE
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build/tests
+        run: ctest -C $BUILD_TYPE

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(stego LANGUAGES CXX)
+project(Stego LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -41,18 +41,18 @@ set(PROJECT_SOURCES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(stego
+    qt_add_executable(${PROJECT_NAME}
         ${PROJECT_SOURCES}
     )
 
     qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 else()
     if(ANDROID)
-        add_library(stego SHARED
+        add_library(${PROJECT_NAME} SHARED
             ${PROJECT_SOURCES}
         )
     else()
-        add_executable(stego
+        add_executable(${PROJECT_NAME}
             ${PROJECT_SOURCES}
         )
     endif()
@@ -60,4 +60,4 @@ else()
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
-target_link_libraries(stego PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets libstego)

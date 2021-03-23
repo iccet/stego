@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(TestCase LANGUAGES CXX)
+project(TemplateTestCase LANGUAGES CXX)
 
 find_package(Qt5Test REQUIRED)
 
