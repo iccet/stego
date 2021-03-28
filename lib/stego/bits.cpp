@@ -1,6 +1,6 @@
 #include "bits.hpp"
 
-QBitArray toBitArray(QByteArray &array)
+QBitArray toBitArray(const QByteArray &array)
 {
     QBitArray bits(8 * array.length());
 
@@ -11,7 +11,7 @@ QBitArray toBitArray(QByteArray &array)
     return bits;
 }
 
-QByteArray toByteArray(QBitArray &array)
+QByteArray toByteArray(const QBitArray &array)
 {
     QByteArray bytes(array.count() / 8, 0);
 
