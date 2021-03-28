@@ -43,8 +43,7 @@ void KutterDecodingTestCase::initTestCase()
 
 void KutterDecodingTestCase::init() {
     QFETCH_GLOBAL(QString, data);
-    QFETCH(int, height);
-    QFETCH(int, width);
+
     QFETCH(QByteArray, container);
 
     _data = data;
@@ -58,13 +57,17 @@ void KutterDecodingTestCase::decodingTestCase_data()
     QTest::addColumn<int>("width");
     QTest::addColumn<QByteArray>("container");
 
-    QTest::newRow("Filled encoded container") << 25 << 40 << QByteArray(25 * 40, 0xf1);
+    QTest::newRow("Filled encoded container") << 40 << 40 << QByteArray(40 * 40, 0xf1);
 }
 
 void KutterDecodingTestCase::decodingTestCase()
 {
+    QFETCH(int, height);
+    QFETCH(int, width);
     auto actual = _encoder->decode(_container);
     qDebug() << QString(actual);
+    qDebug() <<  _encoder->decode(height, width, _container);
+    QVERIFY(actual.count());
 }
 
 void KutterDecodingTestCase::cleanupTestCase()

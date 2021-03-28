@@ -28,7 +28,6 @@ bool Kutter::encode(QString data, QByteArray &container)
         auto d = _q * delta(c);
         container[p + 2] = container[p + 2] + (bits[i] ? d : -d);
     }
-    qDebug() << "Data" << bits;
 
     return 1;
 }
@@ -66,22 +65,30 @@ QByteArray Kutter::decode(const QByteArray &container)
                 ConstSkipIterator(strip.cend()), 0);
 
         auto guess = s / _c / 2;
-        bits[int(i / sizeof(QRgb)) - _c] = std::signbit( guess - container[i + 2]);
+        bits[int(i / sizeof(QRgb)) - _c] = std::signbit(guess - container[i + 2]);
     }
-    qDebug() << "Encoded" << bits;
     return toByteArray(bits);
 }
 
 QByteArray Kutter::decode(int h, int w, const QByteArray &container)
 {
-    Q_ASSERT_X(false, __FILE__, "Not implemented");
     Q_ASSERT(w * h == container.count());
-
     const auto *p = reinterpret_cast<const char(*)[w]>(container.data());
+    w /= sizeof(QRgb);
+    h /= sizeof(QRgb);
 
-    for (int i = 0; i < h; i++)
-        for (int j = 0; j < w; j++)
+    Q_ASSERT(w > 2 * _c && h > 2 * _c);
+
+    QBitArray bits(container.count());
+
+    for (int i = _c; i < h - _c; i++)
+        for (int j = _c; j < w - _c; j++)
         {
-            qDebug() << QString::number(p[i][j], 16);
+            for (int k = 0; k < _c; k++)
+            {
+
+            }
+            qDebug() << QString::number(p[i][j]);
         }
+    return toByteArray(bits);
 }
