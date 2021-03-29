@@ -81,6 +81,7 @@ QByteArray Kutter::decode(int h, int w, const QByteArray &container)
 
     QBitArray bits(container.count());
 
+    qDebug() << _c << h - _c << w - _c;
     for (int i = _c; i < h - _c; i++)
         for (int j = _c; j < w - _c; j++)
         {
@@ -88,7 +89,7 @@ QByteArray Kutter::decode(int h, int w, const QByteArray &container)
             {
 
             }
-            qDebug() << QString::number(p[i][j]);
+            qDebug() << QString::number(p[i][j + 2], 16);
         }
     return toByteArray(bits);
 }

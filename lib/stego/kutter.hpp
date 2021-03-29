@@ -14,6 +14,7 @@
 #include "abstractencoder.hpp"
 #include "bits.hpp"
 #include "skip.hpp"
+#include "cross.hpp"
 
 class Kutter : public QObject, public AbstractEncoder
 {
