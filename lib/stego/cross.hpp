@@ -3,9 +3,16 @@
 #define CONST_CROSS_ITERATOR_HPP
 
 #include <iterator>
+#include <tuple>
+#include <iostream>
+#include <array>
+#include <utility>
+
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/range/irange.hpp>
 #include <boost/log/trivial.hpp>
+
+#include "meta.hpp"
 
 template<typename _InputIterator,
         typename __T = typename std::iterator_traits<_InputIterator>::value_type::value_type>
@@ -56,4 +63,60 @@ private:
     Range _range;
 };
 
+template<int Size, typename InputIterator, int ... Position>
+struct CrossIterator : public boost::iterator_facade<
+        CrossIterator<Size, InputIterator, Position...>,
+        typename std::iterator_traits<InputIterator>::value_type::value_type const,
+        boost::forward_traversal_tag>
+{
+    using It = InputIterator;
+    using Index = decltype(std::make_tuple(Position...));
+    using Range = std::vector<Index>;
+
+    using _T = typename std::iterator_traits<InputIterator>::value_type::value_type;
+
+    CrossIterator(It i) : _i(i) { }
+
+    CrossIterator(It i, std::integer_sequence<int, Position...>) : _i(i)
+    {
+        BOOST_ASSERT(sizeof...(Position));
+
+        std::array<int, 2 * Size + 1> indexes { };
+        std::iota(indexes.begin(), indexes.end(), -Size);
+
+        for (auto i : indexes)
+        {
+            std::array<int, sizeof...(Position)> permutation{Position...};
+            permutation.front() += i;
+            std::reverse(permutation.begin(), permutation.end());
+
+            for (int j = 0; j < sizeof...(Position); ++j)
+            {
+                auto tuple = a2t_impl(permutation, std::make_index_sequence<sizeof...(Position)>());
+                _range.push_back(tuple);
+                std::rotate(permutation.begin(), permutation.begin() + j, permutation.end());
+            }
+        }
+    }
+
+    void increment()
+    {
+        _range.pop_back();
+    }
+
+    _T const& dereference() const
+    {
+        auto x = _range.back();
+        return indexing<It, Position...>(_i, x);
+    }
+
+    bool equal(CrossIterator) const
+    {
+        return _range.empty();
+    }
+
+private:
+    It _i;
+    Range _range;
+};
 #endif //CONST_CROSS_ITERATOR_HPP
