@@ -73,23 +73,30 @@ QByteArray Kutter::decode(const QByteArray &container)
 QByteArray Kutter::decode(int h, int w, const QByteArray &container)
 {
     Q_ASSERT(w * h == container.count());
-    const auto *p = reinterpret_cast<const char(*)[w]>(container.data());
+    auto matrix = copy(container, w);
+
+    foreach(auto row, matrix)
+    {
+        qDebug() << row;
+    }
+
     w /= sizeof(QRgb);
     h /= sizeof(QRgb);
 
     Q_ASSERT(w > 2 * _c && h > 2 * _c);
-
     QBitArray bits(container.count());
 
     qDebug() << _c << h - _c << w - _c;
     for (int i = _c; i < h - _c; i++)
         for (int j = _c; j < w - _c; j++)
         {
-            for (int k = 0; k < _c; k++)
-            {
+            auto s = std::accumulate(
+                    ConstCrossIterator(matrix.cbegin(), _c, i, j),
+                    ConstCrossIterator(matrix.cend()), 0);
 
-            }
-            qDebug() << QString::number(p[i][j + 2], 16);
+            qDebug() << s;
+            auto guess = s / _c / 4;
+            bits[i / _c + j] = std::signbit(guess - container[i + 2]);
         }
     return toByteArray(bits);
 }

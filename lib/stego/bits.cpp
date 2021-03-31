@@ -31,3 +31,18 @@ void copy(const QByteArray &src, QByteArray &dst)
     dst.setRawData(src.data(), src.count());
 }
 
+QVector<QVector<QByteArray::value_type>> copy(const QByteArray &src, int w)
+{
+    const auto *p = reinterpret_cast<const char(*)[w]>(src.data());
+    QVector<QVector<QByteArray::value_type>> matrix(w / sizeof(QRgb));
+
+    int r = 0;
+    for (auto &row : matrix)
+    {
+        auto begin = std::next(p[r], sizeof(QRgb) - 2);
+        std::copy(ConstSkipIterator(sizeof(QRgb), begin),
+                  ConstSkipIterator(p[r++] + w), std::back_inserter(row));
+    }
+
+    return matrix;
+}
