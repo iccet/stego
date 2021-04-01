@@ -66,7 +66,7 @@ private:
 template<int Size, typename InputIterator, int ... Position>
 struct CrossIterator : public boost::iterator_facade<
         CrossIterator<Size, InputIterator, Position...>,
-        typename std::iterator_traits<InputIterator>::value_type::value_type const,
+        int const,
         boost::forward_traversal_tag>
 {
     using It = InputIterator;
@@ -92,7 +92,7 @@ struct CrossIterator : public boost::iterator_facade<
 
             for (int j = 0; j < sizeof...(Position); ++j)
             {
-                auto tuple = a2t_impl(permutation, std::make_index_sequence<sizeof...(Position)>());
+                auto tuple = to_tuple(permutation, std::make_index_sequence<sizeof...(Position)>());
                 _range.push_back(tuple);
                 std::rotate(permutation.begin(), permutation.begin() + j, permutation.end());
             }
@@ -107,7 +107,9 @@ struct CrossIterator : public boost::iterator_facade<
     _T const& dereference() const
     {
         auto x = _range.back();
-        return indexing<It, Position...>(_i, x);
+        auto i = indexing<It, Position...>(_i, x);
+        BOOST_LOG_TRIVIAL(debug) << i;
+        return i;
     }
 
     bool equal(CrossIterator) const
@@ -120,3 +122,4 @@ private:
     Range _range;
 };
 #endif //CONST_CROSS_ITERATOR_HPP
+

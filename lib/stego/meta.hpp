@@ -16,24 +16,30 @@ constexpr auto create_array()
 }
 
 template<typename Array, std::size_t... I>
-auto a2t_impl(const Array& a, std::index_sequence<I...>)
+auto to_tuple(const Array& a, std::index_sequence<I...>)
 {
     return std::make_tuple(a[I]...);
 }
 
-template<int ... J>
-auto slice(decltype(std::make_tuple(int(), J ...)) t, std::integer_sequence<int, J...>)
+template<int I, int ... J>
+auto slice_tuple(decltype(std::make_tuple(I, J ...)) t, std::integer_sequence<int, J...>)
 {
-    return std::make_tuple(std::get<J>(t) ...);
+    return std::make_tuple(std::get<J + 1>(t) ...);
 }
 
-template<typename Array, int I, int ... J>
-auto indexing(const Array& a, decltype(std::make_tuple(I, J ...)) t)
+template<typename Array, typename T>
+auto indexing(const Array& array, std::tuple<T> tuple)
 {
-    auto r = slice(t, std::make_integer_sequence<int, sizeof...(J)>());
+    auto i = std::get<0>(tuple);
+    return array[i];
+}
 
-    const auto &d = a[std::get<0>(t)];
-    return indexing<decltype(d), J...>(d, r);
+template<typename Array, int I, int ... Index>
+auto indexing(const Array& array, decltype(std::make_tuple(I, Index ...)) tuple)
+{
+    auto index = slice_tuple<Index ...>(tuple, std::make_integer_sequence<int, sizeof...(Index)>());
+    auto sub_array = array[std::get<0>(tuple)];
+    return indexing(sub_array, index);
 }
 
 #endif //STEGO_META_HPP

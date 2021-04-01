@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.5)
+
+project(GenericCrossTestCase LANGUAGES CXX)
+
+find_package(Qt5 COMPONENTS Test Core REQUIRED)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+enable_testing()
+
+add_executable(${PROJECT_NAME} tst_genericcrosstestcase.cpp)
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
+
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Test Qt5::Core libstego)
+
