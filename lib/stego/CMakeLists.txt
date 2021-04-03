@@ -13,16 +13,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Gui REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui REQUIRED)
+find_package(Boost COMPONENTS program_options log log_setup REQUIRED)
 
 file(GLOB SOURCE_FILES ${PROJECT_SOURCE_DIR}/*.cpp)
 file(GLOB HEADER_FILES ${PROJECT_SOURCE_DIR}/*.hpp)
 
 set(PROJECT_SOURCES
-    ${SOURCE_FILES}
-    ${HEADER_FILES}
-)
+        ${SOURCE_FILES}
+        ${HEADER_FILES})
 
 add_library(${LIB_NAME} STATIC ${PROJECT_SOURCES})
+
+target_link_libraries(${LIB_NAME}
+        PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt5::Gui
+        Boost::program_options PUBLIC Boost::log Boost::log_setup)
 
 target_link_libraries(${LIB_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt5::Gui)
 
