@@ -39,7 +39,16 @@ QRgb Kutter::delta(QColor color)
 
 bool Kutter::encode(QString data, uchar *container, int size)
 {
-    return 0;
+    QByteArray bytes = QByteArray::fromRawData((const char *)container, size);
+    if(!encode(data, bytes)) return 0;
+
+    int i = 0;
+    foreach(auto byte, bytes)
+    {
+        container[i++] = byte;
+    }
+
+    return 1;
 }
 
 QByteArray Kutter::decode(const uchar *container, int size)
@@ -75,10 +84,9 @@ QByteArray Kutter::decode(int h, int w, const QByteArray &container)
     Q_ASSERT(w * h == container.count());
     auto matrix = copy(container, w);
 
-    foreach(auto row, matrix)
-    {
-        qDebug() << row;
-    }
+#ifdef QT_DEBUG
+    foreach(auto row, matrix){ qDebug() << row; }
+#endif
 
     w /= sizeof(QRgb);
     h /= sizeof(QRgb);
@@ -86,7 +94,6 @@ QByteArray Kutter::decode(int h, int w, const QByteArray &container)
     Q_ASSERT(w > 2 * _c && h > 2 * _c);
     QBitArray bits(container.count());
 
-    qDebug() << _c << h - _c << w - _c;
     for (int i = _c; i < h - _c; i++)
         for (int j = _c; j < w - _c; j++)
         {
@@ -94,7 +101,6 @@ QByteArray Kutter::decode(int h, int w, const QByteArray &container)
                     ConstCrossIterator(matrix.cbegin(), _c, i, j),
                     ConstCrossIterator(matrix.cend()), 0);
 
-            qDebug() << s;
             auto guess = s / _c / 4;
             bits[i / _c + j] = std::signbit(guess - container[i + 2]);
         }

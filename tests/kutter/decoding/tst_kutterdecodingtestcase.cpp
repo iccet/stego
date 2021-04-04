@@ -24,10 +24,14 @@ private slots:
     void decodingTestCase_data();
     void decodingTestCase();
 
+    void matrixDecodingTestCase_data();
+    void matrixDecodingTestCase();
+
     void cleanupTestCase();
 };
 
-void KutterDecodingTestCase::initTestCase_data() {
+void KutterDecodingTestCase::initTestCase_data()
+{
     QTest::addColumn<QString>("data");
 
     QTest::newRow("Small string") << "test";
@@ -53,6 +57,19 @@ void KutterDecodingTestCase::init() {
 
 void KutterDecodingTestCase::decodingTestCase_data()
 {
+    QTest::addColumn<QByteArray>("container");
+
+    QTest::newRow("Filled encoded container") << QByteArray(40 * 40, 0xf1);
+}
+
+void KutterDecodingTestCase::decodingTestCase()
+{
+    auto actual = _encoder->decode(_container);
+    QVERIFY(actual.count());
+}
+
+void KutterDecodingTestCase::matrixDecodingTestCase_data()
+{
     QTest::addColumn<int>("height");
     QTest::addColumn<int>("width");
     QTest::addColumn<QByteArray>("container");
@@ -60,13 +77,11 @@ void KutterDecodingTestCase::decodingTestCase_data()
     QTest::newRow("Filled encoded container") << 40 << 40 << QByteArray(40 * 40, 0xf1);
 }
 
-void KutterDecodingTestCase::decodingTestCase()
+void KutterDecodingTestCase::matrixDecodingTestCase()
 {
     QFETCH(int, height);
     QFETCH(int, width);
-    auto actual = _encoder->decode(_container);
-    qDebug() << QString(actual);
-    qDebug() <<  _encoder->decode(height, width, _container);
+    auto actual = _encoder->decode(height, width, _container);
     QVERIFY(actual.count());
 }
 
