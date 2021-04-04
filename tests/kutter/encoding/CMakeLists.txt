@@ -17,5 +17,5 @@ enable_testing()
 add_executable(${PROJECT_NAME} tst_kutterencodingtestcase.cpp)
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Test Qt5::Core Qt5::Gui libstego)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Test Qt5::Core Qt5::Gui Stg)
 
