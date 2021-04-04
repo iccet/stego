@@ -11,18 +11,19 @@ class Lsb : public QObject, public AbstractEncoder
 {
     Q_OBJECT
     Q_INTERFACES(AbstractEncoder)
+public:
+    using Base = AbstractEncoder;
 
 private:
     inline int channel(int bitIndex);
 
 public:
+
     explicit Lsb(QObject *parent = nullptr);
     virtual ~Lsb() = default;
 
     bool encode(QString data, QByteArray &container) override;
-    bool encode(QString data, uchar *container, int size) override;
 
-    QByteArray decode(const uchar *container, int size) override;
     QByteArray decode(const QByteArray &container) override;
 };
 

@@ -24,7 +24,8 @@ private slots:
     void cleanupTestCase();
 };
 
-void KutterRawDecodingTestCase::initTestCase_data() {
+void KutterRawDecodingTestCase::initTestCase_data()
+{
     Q_INIT_RESOURCE(data);
     QTest::addColumn<QString>("data");
 
@@ -42,9 +43,7 @@ void KutterRawDecodingTestCase::initTestCase()
     _encoder = new Kutter(this);
 }
 
-void KutterRawDecodingTestCase::init()
-{
-}
+void KutterRawDecodingTestCase::init() { }
 
 void KutterRawDecodingTestCase::imageTestCase_data()
 {
@@ -67,10 +66,10 @@ void KutterRawDecodingTestCase::imageTestCase()
     int count = image.width() * image.height();
 
     QVERIFY(count);
-    QVERIFY(_encoder->encode(data, bits, count));
+    QVERIFY(_encoder->Base::encode(data, bits, count));
     QBENCHMARK
     {
-        auto actual = _encoder->decode(bits, count);
+        auto actual = _encoder->Base::decode(bits, count);
         QVERIFY(!actual.isEmpty());
     }
 }

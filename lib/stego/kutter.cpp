@@ -37,26 +37,6 @@ QRgb Kutter::delta(QColor color)
     return 0.299 * color.red() + 0.587 * color.green() + 0.114 * color.blue();
 }
 
-bool Kutter::encode(QString data, uchar *container, int size)
-{
-    QByteArray bytes = QByteArray::fromRawData((const char *)container, size);
-    if(!encode(data, bytes)) return 0;
-
-    int i = 0;
-    foreach(auto byte, bytes)
-    {
-        container[i++] = byte;
-    }
-
-    return 1;
-}
-
-QByteArray Kutter::decode(const uchar *container, int size)
-{
-    QByteArray bytes = QByteArray::fromRawData((const char*)container, size);
-    return decode(bytes);
-}
-
 QByteArray Kutter::decode(const QByteArray &container)
 {
     const int _start = _c * sizeof(QRgb);

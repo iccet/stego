@@ -20,7 +20,10 @@ class Kutter : public QObject, public AbstractEncoder
 {
     Q_OBJECT
     Q_INTERFACES(AbstractEncoder)
+public:
+    using Base = AbstractEncoder;
 
+private:
     const QRandomGenerator *_generator;
     const double _q;
     const int _c;
@@ -32,9 +35,7 @@ public:
     explicit Kutter(QObject *parent = nullptr);
 
     bool encode(QString data, QByteArray &container) override;
-    bool encode(QString data, uchar *container, int size) override;
 
-    QByteArray decode(const uchar *container, int size) override;
     QByteArray decode(const QByteArray &_init) override;
     QByteArray decode(int h, int w, const QByteArray &container);
 };

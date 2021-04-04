@@ -67,10 +67,10 @@ void LsbRawDecodingTestCase::imageTestCase()
     int count = image.width() * image.height();
 
     QVERIFY(count);
-    QVERIFY(_encoder->encode(data, bits, count));
+    QVERIFY(_encoder->Base::encode(data, bits, count));
     QBENCHMARK
     {
-        auto actual = _encoder->decode(bits, count);
+        auto actual = _encoder->Base::decode(bits, count);
         QCOMPARE(QString(actual), data);
     }
 }
