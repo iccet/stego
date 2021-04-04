@@ -43,6 +43,11 @@ jobs:
         with:
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
 
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
       - name: Create Build Environment
         run: cmake -E make_directory ${{github.workspace}}/build
 

@@ -1,5 +1,9 @@
 #include "stg.hpp"
 
-Stg::Stg()
+namespace Stg
 {
-}
+    Stg::Stg()
+    {
+    }
+} // namespace Stg
+

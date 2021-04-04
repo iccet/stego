@@ -3,6 +3,8 @@
 #include "stego/abstractencoder.hpp"
 #include "stego/kutter.hpp"
 
+using namespace Stg;
+
 class KutterDecodingTestCase : public QObject
 {
     Q_OBJECT

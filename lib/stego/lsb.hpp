@@ -7,24 +7,28 @@
 #include "bits.hpp"
 #include "abstractencoder.hpp"
 
-class Lsb : public QObject, public AbstractEncoder
+namespace Stg
 {
-    Q_OBJECT
-    Q_INTERFACES(AbstractEncoder)
-public:
-    using Base = AbstractEncoder;
+    class Lsb : public QObject, public AbstractEncoder
+    {
+        Q_OBJECT
+        Q_INTERFACES(Stg::AbstractEncoder)
+    public:
+        using Base = AbstractEncoder;
 
-private:
-    inline int channel(int bitIndex);
+    private:
+        inline int channel(int bitIndex);
 
-public:
+    public:
 
-    explicit Lsb(QObject *parent = nullptr);
-    virtual ~Lsb() = default;
+        explicit Lsb(QObject *parent = nullptr);
+        virtual ~Lsb() = default;
 
-    bool encode(QString data, QByteArray &container) override;
+        bool encode(QString data, QByteArray &container) override;
 
-    QByteArray decode(const QByteArray &container) override;
-};
+        QByteArray decode(const QByteArray &container) override;
+    };
+
+} // namespace Stg
 
 #endif // LSB_HPP

@@ -7,53 +7,56 @@
 #include <boost/range/irange.hpp>
 #include <boost/log/trivial.hpp>
 
-template<typename _InputIterator,
-        typename __T = typename std::iterator_traits<_InputIterator>::value_type::value_type>
-struct ConstCrossIterator : public boost::iterator_facade<
-        ConstCrossIterator<_InputIterator>,
-        __T const,
-        boost::forward_traversal_tag>
+namespace Stg
 {
-    using It = _InputIterator;
-    using Range = std::vector<std::tuple<int, int>>;
-
-    ConstCrossIterator(It i) : _i(i) { }
-
-    ConstCrossIterator(It i, size_t s, int x, int y) : _i(i)
+    template<typename _InputIterator,
+            typename __T = typename std::iterator_traits<_InputIterator>::value_type::value_type>
+    struct ConstCrossIterator : public boost::iterator_facade<
+            ConstCrossIterator<_InputIterator>,
+            __T const,
+            boost::forward_traversal_tag>
     {
-        std::vector<int> v(2 * s + 1);
-        std::iota(v.begin(), v.end(), -s);
+        using It = _InputIterator;
+        using Range = std::vector<std::tuple<int, int>>;
 
-        for (auto i : v)
+        ConstCrossIterator(It i) : _i(i) { }
+
+        ConstCrossIterator(It i, size_t s, int x, int y) : _i(i)
         {
-            std::vector<int> t {0, i};
-            std::sort(t.begin(), t.end());
-            do {
-                _range.push_back(std::make_tuple(x - t.front(), y - t.back()));
+            std::vector<int> v(2 * s + 1);
+            std::iota(v.begin(), v.end(), -s);
+
+            for (auto i : v)
+            {
+                std::vector<int> t {0, i};
+                std::sort(t.begin(), t.end());
+                do {
+                    _range.push_back(std::make_tuple(x - t.front(), y - t.back()));
+                }
+                while(std::next_permutation(t.begin(), t.end()));
             }
-            while(std::next_permutation(t.begin(), t.end()));
         }
-    }
 
-    void increment()
-    {
-        _range.pop_back();
-    }
+        void increment()
+        {
+            _range.pop_back();
+        }
 
-    __T const& dereference() const
-    {
-        auto [x, y] = _range.back();
-        return _i[x][y];
-    }
+        __T const& dereference() const
+        {
+            auto [x, y] = _range.back();
+            return _i[x][y];
+        }
 
-    bool equal(ConstCrossIterator) const
-    {
-        return _range.empty();
-    }
+        bool equal(ConstCrossIterator) const
+        {
+            return _range.empty();
+        }
 
-private:
-    It _i;
-    Range _range;
-};
+    private:
+        It _i;
+        Range _range;
+    };
+} // namespace Stg::Internal
 
 #endif //CONST_CROSS_ITERATOR_HPP

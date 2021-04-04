@@ -1,21 +1,25 @@
 #include "abstractencoder.hpp"
 
-bool AbstractEncoder::encode(QString data, uchar *container, int size)
+namespace Stg
 {
-    QByteArray bytes = QByteArray::fromRawData((const char *)container, size);
-    if(!encode(data, bytes)) return 0;
-
-    int i = 0;
-    foreach(auto byte, bytes)
+    bool AbstractEncoder::encode(QString data, uchar *container, int size)
     {
-        container[i++] = byte;
+        QByteArray bytes = QByteArray::fromRawData((const char *)container, size);
+        if(!encode(data, bytes)) return 0;
+
+        int i = 0;
+                foreach(auto byte, bytes)
+            {
+                container[i++] = byte;
+            }
+
+        return 1;
     }
 
-    return 1;
-}
+    QByteArray AbstractEncoder::decode(const uchar *container, int size)
+    {
+        QByteArray bytes = QByteArray::fromRawData((const char*)container, size);
+        return decode(bytes);
+    }
 
-QByteArray AbstractEncoder::decode(const uchar *container, int size)
-{
-    QByteArray bytes = QByteArray::fromRawData((const char*)container, size);
-    return decode(bytes);
-}
+} // namespace PyStg
