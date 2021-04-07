@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.14)
 
 project(Stg LANGUAGES CXX)
 
-string(TOLOWER ${PROJECT_NAME} LIB_NAME)
-
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -27,7 +25,5 @@ add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
 target_link_libraries(${PROJECT_NAME}
         PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt5::Gui
         Boost::program_options PUBLIC Boost::log Boost::log_setup)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt5::Gui)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE STG_LIBRARY)
