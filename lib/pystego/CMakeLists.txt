@@ -48,12 +48,16 @@ set(VENV_DIR ${PROJECT_SOURCE_DIR}/venv)
 
 add_custom_command(OUTPUT ${VENV_DIR}
         COMMAND ${Python3_EXECUTABLE} -m venv ${VENV_DIR}
+        COMMAND ${VENV_DIR}/bin/python3 -m pip install wheel
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS ${PROJECT_NAME} ${SETUP_PY}
         COMMENT "Setup virtual environment")
 
+set(VENV_DIR ${VENV_DIR} PARENT_SCOPE)
+set(Python3_EXECUTABLE ${VENV_DIR}/bin/python3 PARENT_SCOPE)
+
 add_custom_command(OUTPUT ${EXTENSION_BINARY_DIR}
-        COMMAND ${VENV_DIR}/bin/pip3 install .
+        COMMAND ${VENV_DIR}/bin/pip3 -v install .
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS ${PROJECT_NAME} ${SETUP_PY} ${VENV_DIR}
         COMMENT "Start build ${PROJECT_NAME} extension")
