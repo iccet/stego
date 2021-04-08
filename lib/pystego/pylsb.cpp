@@ -1,39 +1,7 @@
 #include "pylsb.hpp"
 
-int __init__(PyLsb * self, PyObject * args)
+int __init__(PyLsb * self)
 {
-    int m, n;
-    PyObject * list;
-    double ** array;
-
-    if (!PyArg_ParseTuple(args, "O", &list))
-    {
-        return -1;
-    }
-
-    m = PyList_Size(list);
-    array = new double * [m];
-    PyObject * iter = PyObject_GetIter(list);
-    if (!iter) {
-        return -1;
-    }
-
-    for(int i = 0; i < m; i++)
-    {
-        PyObject * row = PyIter_Next(iter);
-        n = PyList_Size(row);
-        array[i] = new double[n];
-        if (!row) break;
-        if (!PyList_Check(row)) return -1;
-
-        PyObject * col = PyObject_GetIter(row);
-        for(int j = 0; j < n; j++)
-        {
-            PyObject *el = PyIter_Next(col);
-            if (!el) break;
-            array[i][j] = PyFloat_AsDouble(el);
-        }
-    }
     return 0;
 }
 
@@ -57,3 +25,25 @@ void encode(PyLsb * self)
 {
 //        (self->_impl)->encode();
 }
+
+PyMethodDef PyLsbMethods[] =
+{
+    {"encode", (PyCFunction) encode, METH_VARARGS, "encode matrix"},
+    {NULL, NULL, 0, NULL}
+};
+
+PyTypeObject PyType_Lsb =
+{
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "PyStg.lsb",
+    .tp_basicsize = sizeof(PyLsb),
+    .tp_dealloc = (destructor) __del__,
+    .tp_repr = (reprfunc) __repr__,
+    .tp_str = (reprfunc) __repr__,
+    .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_doc = "Steganography using LSB algorithm",
+    .tp_methods = (PyMethodDef *) PyLsbMethods,
+    .tp_init = (initproc) __init__,
+    .tp_alloc = (allocfunc) PyType_GenericAlloc,
+    .tp_new = (newfunc) PyType_GenericNew,
+};

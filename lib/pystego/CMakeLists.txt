@@ -53,7 +53,7 @@ add_custom_command(OUTPUT ${VENV_DIR}
         COMMENT "Setup virtual environment")
 
 add_custom_command(OUTPUT ${EXTENSION_BINARY_DIR}
-        COMMAND ${VENV_DIR}/bin/python3 ${SETUP_PY} install
+        COMMAND ${VENV_DIR}/bin/pip3 install .
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS ${PROJECT_NAME} ${SETUP_PY} ${VENV_DIR}
         COMMENT "Start build ${PROJECT_NAME} extension")

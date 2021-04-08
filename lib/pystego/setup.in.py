@@ -1,3 +1,4 @@
+from typing import List
 from distutils.core import setup, Extension
 from os import path
 from glob import glob
@@ -11,7 +12,7 @@ def remove_namespace(f):
 
 
 @remove_namespace
-def split(_path: str):
+def split(_path: str) -> List[str]:
     return _path.split(';')
 
 

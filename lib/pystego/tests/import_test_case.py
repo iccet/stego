@@ -2,7 +2,7 @@ import unittest
 import PyStg
 
 
-class ModuleTestCase(unittest.TestCase):
+class ImportTestCase(unittest.TestCase):
     def test_module_dict(self):
         self.assertIsNotNone(dir(PyStg))
 
