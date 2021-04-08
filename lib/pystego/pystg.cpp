@@ -45,19 +45,12 @@ int PyModule_AddType(PyObject *module, const char *name, PyTypeObject *type)
     return 0;
 }
 
-PyMODINIT_FUNC
-PyInit_PyStg()
+PyMODINIT_FUNC PyInit_PyStg()
 {
     PyObject *module = PyModule_Create(&PyStg);
-//    if (module == NULL) return NULL;
+    if (module == NULL) return NULL;
 
-//    PyModule_AddType(module, "lsb", &PyType_Lsb);
-
-    PyModule_AddIntConstant(module, "FPUTS_FLAG", 64);
-
-    #define FPUTS_MACRO 256
-
-    PyModule_AddIntMacro(module, FPUTS_MACRO);
+    PyModule_AddType(module, "lsb", &PyType_Lsb);
 
     return module;
 }

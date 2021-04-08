@@ -44,13 +44,18 @@ set(EXTENSION_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/build")
 file(COPY ${PROJECT_SOURCES} DESTINATION ${PROJECT_BINARY_DIR})
 configure_file("${PROJECT_SOURCE_DIR}/setup.in.py" ${SETUP_PY})
 
-set(VENV_DIR ${CMAKE_CURRENT_BINARY_DIR}/venv)
+set(VENV_DIR ${PROJECT_SOURCE_DIR}/venv)
 
-add_custom_command(OUTPUT ${EXTENSION_BINARY_DIR}
+add_custom_command(OUTPUT ${VENV_DIR}
         COMMAND ${Python3_EXECUTABLE} -m venv ${VENV_DIR}
-        COMMAND ${VENV_DIR}/bin/python3 ${SETUP_PY} install
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS ${PROJECT_NAME} ${SETUP_PY}
+        COMMENT "Setup virtual environment")
+
+add_custom_command(OUTPUT ${EXTENSION_BINARY_DIR}
+        COMMAND ${VENV_DIR}/bin/python3 ${SETUP_PY} install
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        DEPENDS ${PROJECT_NAME} ${SETUP_PY} ${VENV_DIR}
         COMMENT "Start build ${PROJECT_NAME} extension")
 
 add_custom_target(${PROJECT_NAME}_EXTENSION ALL

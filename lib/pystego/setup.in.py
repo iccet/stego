@@ -33,4 +33,5 @@ if __name__ == '__main__':
           author_email='',
           url='https://github.com/iccet/stego',
           long_description='''''',
+          license='MIT',
           ext_modules=[stg_extension])
