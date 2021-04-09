@@ -1,25 +1,30 @@
 #ifndef PYLSB_HPP
 #define PYLSB_HPP
 
+#include <iostream>
+
 #include <boost/python.hpp>
+#include <boost/log/trivial.hpp>
 
 #include "globconf.hpp"
 #include "lsb.hpp"
 
-extern PyTypeObject PyType_Lsb;
-
-typedef struct
+template<typename T>
+struct True : std::unary_function<T, bool>
 {
-    PyObject_HEAD;
-    Stg::Lsb *_impl;
-} PyLsb;
+    bool operator () (T value){ return value; }
+};
 
-int __init__(PyLsb *self);
-void __del__(PyLsb *self);
+struct PyLsb
+{
+    PyLsb() = default;
+    PyLsb(std::reference_wrapper<const struct PyLsb>::type &type);
 
-PyObject *__new__(PyTypeObject *type, PyObject *args, PyObject *kwargs);
-PyObject *__repr__(PyLsb *self);
 
-void encode(PyLsb *self);
+    bool encode();
+
+private:
+    Stg::Lsb _impl;
+};
 
 #endif // PYLSB_HPP

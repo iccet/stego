@@ -1,33 +1,12 @@
 #include "pystg.hpp"
 
-PyModuleDef PyStg =
+BOOST_PYTHON_MODULE(PyStg)
 {
-    PyModuleDef_HEAD_INIT,
-    .m_name = "PyStg",
-    .m_doc = "PYSTG",
-    .m_size = -1,
-};
+    class_<PyLsb, boost::noncopyable>("Lsb", "Steganography using LSB algorithm")
+        .def("encode", &PyLsb::encode)
+        ;
 
-int PyModule_AddType(PyObject *module, const char *name, PyTypeObject *type)
-{
-    if (PyType_Ready(type) < 0) return -1;
-
-    Py_INCREF(type);
-    if (PyModule_AddObject(module, name, (PyObject *)type) < 0)
-    {
-        Py_DECREF(type);
-        Py_DECREF(module);
-        return -1;
-    }
-    return 0;
-}
-
-PyMODINIT_FUNC PyInit_PyStg()
-{
-    PyObject *module = PyModule_Create(&PyStg);
-    if (module == NULL) return NULL;
-
-    PyModule_AddType(module, "Lsb", &PyType_Lsb);
-
-    return module;
+    class_<PyKutter, boost::noncopyable>("Kutter", "Kutter steganographical method")
+        .def("encode", &PyKutter::encode)
+        ;
 }

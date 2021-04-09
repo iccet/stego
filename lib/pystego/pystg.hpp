@@ -1,10 +1,18 @@
 #ifndef PYSTG_HPP
 #define PYSTG_HPP
 
+#include <QString>
+
 #include "pylsb.hpp"
+#include "pykutter.hpp"
 
-int PyModule_AddType(PyObject * module, const char * name, PyTypeObject * type);
+using namespace boost::python;
+using namespace Stg;
 
-PyMODINIT_FUNC PyInit_PyStg();
+template<typename ... T>
+const char *compile_name(T ... name)
+{
+    return (QString(name) + ...).c_str();
+}
 
 #endif // PYSTG_HPP

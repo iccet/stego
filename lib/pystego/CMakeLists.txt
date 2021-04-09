@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(PyStg LANGUAGES CXX)
+project(PyStg VERSION 0.0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2")
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/tests")
@@ -36,6 +37,10 @@ install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 get_target_property(Stg_LINKED_LIBRARIES Stg LINK_LIBRARIES)
 list(FILTER Stg_LINKED_LIBRARIES INCLUDE REGEX "Qt*")
 list(APPEND Stg_LINKED_LIBRARIES Stg)
+list(APPEND Stg_LINKED_LIBRARIES boost_python38)
+list(APPEND Stg_LINKED_LIBRARIES boost_log)
+list(APPEND Stg_LINKED_LIBRARIES boost_log_setup)
+list(APPEND Stg_LINKED_LIBRARIES boost_program_options)
 list(JOIN Stg_LINKED_LIBRARIES ";" LINKED_LIBRARIES)
 
 set(SETUP_PY "${CMAKE_CURRENT_BINARY_DIR}/setup.py")
@@ -57,7 +62,7 @@ set(VENV_DIR ${VENV_DIR} PARENT_SCOPE)
 set(Python3_EXECUTABLE ${VENV_DIR}/bin/python3 PARENT_SCOPE)
 
 add_custom_command(OUTPUT ${EXTENSION_BINARY_DIR}
-        COMMAND ${VENV_DIR}/bin/pip3 -v install .
+        COMMAND ${VENV_DIR}/bin/pip3 -v install -vU --no-cache-dir .
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS ${PROJECT_NAME} ${SETUP_PY} ${VENV_DIR}
         COMMENT "Start build ${PROJECT_NAME} extension")
