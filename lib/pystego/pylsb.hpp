@@ -2,6 +2,7 @@
 #define PYLSB_HPP
 
 #include <iostream>
+#include <QString>
 
 #include <boost/python.hpp>
 #include <boost/log/trivial.hpp>
@@ -18,10 +19,9 @@ struct True : std::unary_function<T, bool>
 struct PyLsb
 {
     PyLsb() = default;
-    PyLsb(std::reference_wrapper<const struct PyLsb>::type &type);
 
 
-    bool encode();
+    bool encode(std::string data, PyObject *container);
 
 private:
     Stg::Lsb _impl;
