@@ -21,8 +21,11 @@ struct PyLsb
     PyLsb() = default;
 
 
-    bool encode(std::string data, PyObject *container);
+    bool encode(const std::string& data, PyObject *container);
+    std::string decode(PyObject *container);
 
+private:
+    static void checkContainerType(PyObject *container);
 private:
     Stg::Lsb _impl;
 };

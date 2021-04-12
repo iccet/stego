@@ -13,7 +13,8 @@ BOOST_PYTHON_MODULE(PyStg)
     scope().attr("__doc__") = std::string(PROJECT_NAME);
 
     class_<PyLsb, boost::noncopyable>("Lsb", "Steganography using LSB algorithm")
-        .def("encode", &PyLsb::encode, (arg("data"), arg("container")));
+        .def("encode", &PyLsb::encode, (arg("data"), arg("container")))
+        .def("decode", &PyLsb::decode, (arg("container")));
 
     class_<PyKutter, boost::noncopyable>("Kutter", "Kutter steganographical method")
         .def("encode", &PyKutter::encode);
