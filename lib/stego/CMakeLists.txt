@@ -20,7 +20,7 @@ set(PROJECT_SOURCES
     ${SOURCE_FILES}
     ${HEADER_FILES})
 
-add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
+add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCES})
 
 target_link_libraries(${PROJECT_NAME}
         PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt5::Gui

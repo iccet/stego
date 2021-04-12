@@ -26,6 +26,7 @@ stg_extension = Extension('${PROJECT_NAME}',
                           include_dirs=['${CMAKE_SYSTEM_INCLUDE_PATH}', '${Stg_SOURCE_DIR}'] + sum(qt_include, []),
                           library_dirs=['${CMAKE_SYSTEM_LIBRARY_PATH}', '${Stg_BINARY_DIR}'],
                           libraries=libraries,
+                          runtime_library_dirs=['${Stg_BINARY_DIR}'],
                           extra_compile_args=extra_compile_args + sysconfig.get_config_var('CFLAGS').split(),
                           sources=source_files)
 
