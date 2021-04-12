@@ -1,5 +1,7 @@
 from typing import List
 
+__version__ = '${PROJECT_VERSION}'
+
 from distutils.core import setup, Extension
 import sysconfig
 from os import path
@@ -23,6 +25,8 @@ libraries = split('${LINKED_LIBRARIES}')
 extra_compile_args = ["-std=c++${CMAKE_CXX_STANDARD}"] + "${CMAKE_CXX_FLAGS}".strip().split(' ')
 qt_include = map(split, ['${Qt5Core_INCLUDE_DIRS}', '${Qt5Gui_INCLUDE_DIRS}'])
 stg_extension = Extension('${PROJECT_NAME}',
+                          define_macros=[('PROJECT_VERSION', '"${PROJECT_VERSION}"'),
+                                         ('PROJECT_NAME', '"${PROJECT_NAME}"')],
                           include_dirs=['${CMAKE_SYSTEM_INCLUDE_PATH}', '${Stg_SOURCE_DIR}'] + sum(qt_include, []),
                           library_dirs=['${CMAKE_SYSTEM_LIBRARY_PATH}', '${Stg_BINARY_DIR}'],
                           libraries=libraries,
@@ -32,11 +36,12 @@ stg_extension = Extension('${PROJECT_NAME}',
 
 if __name__ == '__main__':
     setup(name='${PROJECT_NAME}',
-          version='${PROJECT_VERSION}',
+          version=__version__,
           description='',
           author='',
           author_email='',
           platforms=['Mac OSX', 'POSIX', 'Windows'],
+
           classifiers=[
               'Intended Audience :: Developers',
               'Operating System :: MacOS :: MacOS X',

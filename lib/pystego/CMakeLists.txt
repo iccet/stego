@@ -18,6 +18,7 @@ find_program(VIRTUALENV virtualenv REQUIRED)
 
 file(GLOB SOURCE_FILES ${PROJECT_SOURCE_DIR}/*.cpp)
 file(GLOB HEADER_FILES ${PROJECT_SOURCE_DIR}/*.hpp)
+file(GLOB PYTHON_FILES ${PROJECT_SOURCE_DIR}/*.py)
 
 include_directories(
     ${Stg_SOURCE_DIR}
@@ -30,7 +31,10 @@ set(PROJECT_SOURCES
     ${HEADER_FILES})
 
 add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCES})
-target_compile_definitions(${PROJECT_NAME} PRIVATE MODULE_NAME=${PROJECT_NAME})
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+        PROJECT_NAME="${PROJECT_NAME}"
+        PROJECT_VERSION="${PROJECT_VERSION}")
+
 target_link_libraries(${PROJECT_NAME} ${Python3_LIBRARIES} Stg Boost::python)
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
