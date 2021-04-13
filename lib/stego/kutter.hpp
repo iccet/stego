@@ -40,8 +40,16 @@ namespace Stg
         bool encode(QString data, QByteArray &container) override;
 
         QByteArray decode(const QByteArray &_init) override;
-        QByteArray decode(int h, int w, const QByteArray &container);
+        QByteArray decode(const QByteArray &container, int h, int w);
+
+
+        QByteArray decode(const uchar *container, int size, int h, int w)
+        {
+            QByteArray bytes = QByteArray::fromRawData((const char*)container, size);
+            return decode(bytes, h, w);
+        }
     };
+
 } // namespace Stg
 
 #endif // KUTTER_HPP

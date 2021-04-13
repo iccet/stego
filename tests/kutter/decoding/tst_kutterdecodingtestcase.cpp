@@ -83,7 +83,7 @@ void KutterDecodingTestCase::matrixDecodingTestCase()
 {
     QFETCH(int, height);
     QFETCH(int, width);
-    auto actual = _encoder->decode(height, width, _container);
+    auto actual = _encoder->decode(_container, height, width);
     QVERIFY(actual.count());
 }
 

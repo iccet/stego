@@ -21,7 +21,7 @@ private slots:
 
     void init();
 
-    void encodingTestCase_data();
+    [[maybe_unused]] void encodingTestCase_data();
     void encodingTestCase();
 
     void cleanupTestCase();

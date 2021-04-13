@@ -8,8 +8,10 @@ required_methods = ('encode', 'decode')
 class KutterTestCase(unittest.TestCase):
 
     def setUp(self):
+        self.h = 60
+        self.w = 60
         self.kutter = Kutter()
-        self.container = bytearray(randbytes(1000))
+        self.container = bytearray(randbytes(self.h * self.w))
         self.data = 'test'
 
     def test_doc(self):
@@ -38,11 +40,15 @@ class KutterTestCase(unittest.TestCase):
 
     def test_decode_args(self):
         self.kutter.encode(self.data, self.container)
-        self.assertEqual(self.kutter.decode(self.container), self.data)
+        self.assertIsNotNone(self.kutter.decode(self.container))
 
     def test_decode_kwargs(self):
         self.kutter.encode(self.data, self.container)
-        self.assertEqual(self.kutter.decode(container=self.container), self.data)
+        self.assertIsNotNone(self.kutter.decode(container=self.container))
+
+    def test_decode_dimension(self):
+        self.kutter.encode(self.data, self.container)
+        self.assertIsNotNone(self.kutter.decode(self.container, (self.h, self.w)))
 
 
 if __name__ == '__main__':

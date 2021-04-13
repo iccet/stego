@@ -59,7 +59,7 @@ namespace Stg
         return toByteArray(bits);
     }
 
-    QByteArray Kutter::decode(int h, int w, const QByteArray &container)
+    QByteArray Kutter::decode(const QByteArray &container, int h, int w)
     {
         Q_ASSERT(w * h == container.count());
         auto matrix = copy(container, w);
