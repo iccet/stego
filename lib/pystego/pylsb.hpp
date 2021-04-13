@@ -10,22 +10,15 @@
 #include "globconf.hpp"
 #include "lsb.hpp"
 
-template<typename T>
-struct True : std::unary_function<T, bool>
-{
-    bool operator () (T value){ return value; }
-};
+extern void checkContainerType(PyObject *container);
 
 struct PyLsb
 {
     PyLsb() = default;
 
-
     bool encode(const std::string& data, PyObject *container);
     std::string decode(PyObject *container);
 
-private:
-    static void checkContainerType(PyObject *container);
 private:
     Stg::Lsb _impl;
 };

@@ -18,11 +18,3 @@ std::string PyLsb::decode(PyObject *container)
 
     return {_impl.Base::decode(bytes, size).data()};
 }
-
-void PyLsb::checkContainerType(PyObject *container)
-{
-    if(!PyByteArray_Check(container))
-        throw std::invalid_argument(
-            QString("Invalid container type: must bytearray got %0")
-                .arg(Py_TYPE(container)->tp_name).toStdString());
-}

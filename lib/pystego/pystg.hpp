@@ -15,4 +15,12 @@ const char *compile_name(T ... name)
     return (QString(name) + ...).c_str();
 }
 
+template<typename T>
+struct True : std::unary_function<T, bool>
+{
+    bool operator () (T value){ return value; }
+};
+
+void checkContainerType(PyObject *container);
+
 #endif // PYSTG_HPP

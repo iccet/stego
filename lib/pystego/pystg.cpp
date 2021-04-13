@@ -1,5 +1,13 @@
 #include "pystg.hpp"
 
+void checkContainerType(PyObject *container)
+{
+    if(!PyByteArray_Check(container))
+        throw std::invalid_argument(
+            QString("Invalid container type: must be bytearray got %0")
+                .arg(Py_TYPE(container)->tp_name).toStdString());
+}
+
 void translate(std::invalid_argument const& e)
 {
     PyErr_SetString(PyExc_TypeError, e.what());
@@ -17,5 +25,6 @@ BOOST_PYTHON_MODULE(PyStg)
         .def("decode", &PyLsb::decode, (arg("container")));
 
     class_<PyKutter, boost::noncopyable>("Kutter", "Kutter steganographical method")
-        .def("encode", &PyKutter::encode);
+        .def("encode", &PyKutter::encode, (arg("data"), arg("container")))
+        .def("decode", &PyKutter::decode, (arg("container")));
 }
