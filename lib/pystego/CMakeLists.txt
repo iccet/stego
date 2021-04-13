@@ -8,13 +8,14 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2")
 
-add_subdirectory("${PROJECT_SOURCE_DIR}/tests")
+set(TESTS_DIR ${PROJECT_SOURCE_DIR}/tests)
+add_subdirectory(${TESTS_DIR})
 
 find_package(Python3 COMPONENTS Development Interpreter REQUIRED)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Gui REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui REQUIRED)
 find_package(Boost COMPONENTS python program_options log log_setup REQUIRED)
-find_program(VIRTUALENV virtualenv REQUIRED)
+find_program(VIRTUALENV virtualenv)
 
 file(GLOB SOURCE_FILES ${PROJECT_SOURCE_DIR}/*.cpp)
 file(GLOB HEADER_FILES ${PROJECT_SOURCE_DIR}/*.hpp)
@@ -39,38 +40,74 @@ target_link_libraries(${PROJECT_NAME} ${Python3_LIBRARIES} Stg Boost::python)
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
 get_target_property(Stg_LINKED_LIBRARIES Stg LINK_LIBRARIES)
-list(FILTER Stg_LINKED_LIBRARIES INCLUDE REGEX "Qt*")
+list(APPEND Stg_LINKED_LIBRARIES Boost::python)
+
+foreach(lib ${Stg_LINKED_LIBRARIES})
+    get_target_property(lib_location ${lib} LOCATION)
+    get_filename_component(lib_name ${lib_location} NAME_WE)
+    string(REPLACE "lib" "" lib_name ${lib_name})
+    list(POP_FRONT Stg_LINKED_LIBRARIES unused)
+    list(APPEND Stg_LINKED_LIBRARIES ${lib_name})
+endforeach()
+
 list(APPEND Stg_LINKED_LIBRARIES Stg)
-list(APPEND Stg_LINKED_LIBRARIES boost_python39)
-list(APPEND Stg_LINKED_LIBRARIES boost_log)
-list(APPEND Stg_LINKED_LIBRARIES boost_log_setup)
-list(APPEND Stg_LINKED_LIBRARIES boost_program_options)
+
 list(JOIN Stg_LINKED_LIBRARIES ";" LINKED_LIBRARIES)
 
 set(SETUP_PY "${CMAKE_CURRENT_BINARY_DIR}/setup.py")
 set(EXTENSION_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/build")
+set(PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/dist")
+set(PACKAGE_FILES "${PROJECT_SOURCE_DIR}/README.md")
 
-file(COPY ${PROJECT_SOURCES} DESTINATION ${PROJECT_BINARY_DIR})
+file(COPY ${PROJECT_SOURCES} ${PACKAGE_FILES} DESTINATION ${PROJECT_BINARY_DIR})
 configure_file("${PROJECT_SOURCE_DIR}/setup.in.py" ${SETUP_PY})
 
 set(VENV_DIR ${PROJECT_SOURCE_DIR}/venv)
+set(PYTHON_EXECUTABLE ${VENV_DIR}/bin/python3)
+set(PIP_EXECUTABLE ${VENV_DIR}/bin/pip3)
 
 add_custom_command(OUTPUT ${VENV_DIR}
         COMMAND ${Python3_EXECUTABLE} -m venv ${VENV_DIR}
-        COMMAND ${VENV_DIR}/bin/python3 -m pip install wheel
+        COMMAND ${PIP_EXECUTABLE} install wheel
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS ${PROJECT_NAME} ${SETUP_PY}
         COMMENT "Setup virtual environment")
 
-set(VENV_DIR ${VENV_DIR} PARENT_SCOPE)
-set(Python3_EXECUTABLE ${VENV_DIR}/bin/python3 PARENT_SCOPE)
-
 add_custom_command(OUTPUT ${EXTENSION_BINARY_DIR}
-        COMMAND ${VENV_DIR}/bin/pip3 -v install -vU --no-cache-dir .
+        COMMAND ${PIP_EXECUTABLE} -v install -vU --no-cache-dir .
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS ${PROJECT_NAME} ${SETUP_PY} ${VENV_DIR}
         COMMENT "Start build ${PROJECT_NAME} extension")
 
-add_custom_target(${PROJECT_NAME}_EXTENSION ALL
+add_custom_target(${PROJECT_NAME}Extension ALL
         DEPENDS ${EXTENSION_BINARY_DIR}
         COMMENT "Successfully build ${PROJECT_NAME} extension")
+
+add_custom_command(OUTPUT ${PACKAGE_DIR}
+        COMMAND ${PIP_EXECUTABLE} install --upgrade build
+        COMMAND ${PYTHON_EXECUTABLE} -m build
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        DEPENDS ${PROJECT_NAME} ${SETUP_PY} ${VENV_DIR}
+        COMMENT "Start build ${PROJECT_NAME} package")
+
+add_custom_target(Build${PROJECT_NAME}Package ALL
+        DEPENDS ${PACKAGE_DIR}
+        COMMENT "Successfully build ${PROJECT_NAME} package")
+
+add_custom_target(Upload${PROJECT_NAME}Package ALL
+        COMMAND ${PYTHON_EXECUTABLE} -m twine upload -r testpypi .
+        DEPENDS ${PACKAGE_DIR}
+        WORKING_DIRECTORY ${PACKAGE_DIR}
+        COMMENT "Successfully uploaded ${PROJECT_NAME} package")
+
+enable_testing()
+set(TESTS_NAME ${PROJECT_NAME}Tests)
+
+if(${Python3_VERSION} VERSION_GREATER_EQUAL "3.9.0")
+    add_custom_target(${TESTS_NAME} ALL
+        DEPENDS ${PROJECT_NAME}Extension
+        COMMAND ${PYTHON_EXECUTABLE} -m unittest discover -v -s ${TESTS_DIR} -p "*_test_case.py")
+
+    add_test(${TESTS_NAME} ${TESTS_NAME}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+endif()

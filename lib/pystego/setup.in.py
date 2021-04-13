@@ -1,24 +1,25 @@
 from typing import List
 
 __version__ = '${PROJECT_VERSION}'
+__readme__ = 'README.md'
 
+import mimetypes
 from distutils.core import setup, Extension
 import sysconfig
 from os import path
 from glob import glob
 
 
-def remove_namespace(f):
-    def wrapper(p: str):
-        return f(p.replace('::', ''))
-
-    return wrapper
+mimetypes.init()
+mimetypes.add_type('text/markdown', '.md')
 
 
-@remove_namespace
 def split(_path: str) -> List[str]:
     return _path.split(';')
 
+
+with open(__readme__, "r", encoding="utf-8") as fh:
+    long_description = fh.read()
 
 source_files = glob(path.join(path.dirname(path.realpath(__file__)), "*.cpp"))
 libraries = split('${LINKED_LIBRARIES}')
@@ -50,6 +51,7 @@ if __name__ == '__main__':
               'Programming Language :: Python',
           ],
           url='https://github.com/iccet/stego',
-          long_description='''''',
+          long_description=long_description,
+          long_description_content_type=mimetypes.guess_type(__readme__)[0],
           license='MIT',
           ext_modules=[stg_extension])
