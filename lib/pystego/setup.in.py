@@ -6,9 +6,8 @@ __readme__ = 'README.md'
 import mimetypes
 from distutils.core import setup, Extension
 import sysconfig
-from os import path
+from os import path, getenv
 from glob import glob
-
 
 mimetypes.init()
 mimetypes.add_type('text/markdown', '.md')
@@ -22,6 +21,14 @@ with open(__readme__, "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 source_files = glob(path.join(path.dirname(path.realpath(__file__)), "*.cpp"))
+library_dirs = ['${CMAKE_SYSTEM_LIBRARY_PATH}',
+                '${Stg_BINARY_DIR}',
+                '${Boost_LIBRARY_DIRS}']
+
+qt_lib_dir = getenv('Qt5_DIR')  # for ci/cd
+if qt_lib_dir is not None:
+    library_dirs.append(path.join(qt_lib_dir, 'lib'))
+
 libraries = split('${LINKED_LIBRARIES}')
 extra_compile_args = ["-std=c++${CMAKE_CXX_STANDARD}"] + "${CMAKE_CXX_FLAGS}".strip().split(' ')
 qt_include = map(split, ['${Qt5Core_INCLUDE_DIRS}', '${Qt5Gui_INCLUDE_DIRS}'])
@@ -29,7 +36,7 @@ stg_extension = Extension('${PROJECT_NAME}',
                           define_macros=[('PROJECT_VERSION', '"${PROJECT_VERSION}"'),
                                          ('PROJECT_NAME', '"${PROJECT_NAME}"')],
                           include_dirs=['${CMAKE_SYSTEM_INCLUDE_PATH}', '${Stg_SOURCE_DIR}'] + sum(qt_include, []),
-                          library_dirs=['${CMAKE_SYSTEM_LIBRARY_PATH}', '${Stg_BINARY_DIR}'],
+                          library_dirs=library_dirs,
                           libraries=libraries,
                           runtime_library_dirs=['${Stg_BINARY_DIR}'],
                           extra_compile_args=extra_compile_args + sysconfig.get_config_var('CFLAGS').split(),
