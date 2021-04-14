@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <Cmake>cmake</Cmake>
+        <CsStgDir>csstego</CsStgDir>
+        <LibsDir>$(MSBuildProjectDirectory)/..</LibsDir>
+        <BuildDependsOn>
+            BuildCsStgExtension;
+            $(BuildDependsOn);
+        </BuildDependsOn>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="xunit.assert" Version="2.4.0" />
+      <PackageReference Include="xunit.extensibility.core" Version="2.4.0" />
+        <PackageReference Include="System.Drawing.Common" Version="6.0.0-preview.3.21201.4" />
+    </ItemGroup>
+    
+    <Target Name="BuildCsStgExtension" Outputs="$(OutputPath)/lib$(MSBuildProjectName)" BeforeTargets="Build">
+        <Message Text="Building CsStg extension" Importance="high" />
+        
+        <Exec Command="$(Cmake) -DCMAKE_INSTALL_PREFIX=$([System.IO.Path]::GetFullPath('$(OutputPath)')) $(LibsDir)" WorkingDirectory="$(OutputPath)" />
+        <Exec Command="$(Cmake) --build $(CsStgDir) --target $(MSBuildProjectName)" WorkingDirectory="$(OutputPath)" />
+        <Exec Command="$(Cmake) --install $(CsStgDir)" WorkingDirectory="$(OutputPath)" />
+
+    </Target>
+
+</Project>
