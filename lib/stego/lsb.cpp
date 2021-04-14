@@ -27,27 +27,6 @@ bool Lsb::encode(QString data, QByteArray &container)
     return 1;
 }
 
-bool Lsb::encode(QString data, uchar *container, int size)
-{
-    QByteArray bytes = QByteArray::fromRawData((const char *)container, size);
-    if(!encode(data, bytes)) return 0;
-
-    int i = 0;
-    foreach(auto byte, bytes)
-    {
-        container[i++] = byte;
-    }
-
-    return 1;
-
-}
-
-QByteArray Lsb::decode(const uchar *container, int size)
-{
-    QByteArray bytes = QByteArray::fromRawData((const char*)container, size);
-    return decode(bytes);
-}
-
 QByteArray Lsb::decode(const QByteArray &container)
 {
     QBitArray bits((container.count() - sizeof(QRgb)) * 8);

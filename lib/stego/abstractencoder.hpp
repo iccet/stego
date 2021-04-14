@@ -28,14 +28,14 @@ public:
      * @param container
      * @param size
      */
-    virtual bool encode(QString data, uchar *container, int size) = 0;
+    virtual bool encode(QString data, uchar *container, int size);
 
     /**
      * Decode a raw data.
      *
      * @param container
      */
-    virtual QByteArray decode(const uchar *container, int size) = 0;
+    virtual QByteArray decode(const uchar *container, int size);
 
     /**
      * Decode a raw data.
