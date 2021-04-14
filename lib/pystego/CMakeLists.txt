@@ -15,7 +15,6 @@ find_package(Python3 COMPONENTS Development Interpreter REQUIRED)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Gui REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui REQUIRED)
 find_package(Boost COMPONENTS python program_options log log_setup REQUIRED)
-find_program(VIRTUALENV virtualenv)
 
 file(GLOB SOURCE_FILES ${PROJECT_SOURCE_DIR}/*.cpp)
 file(GLOB HEADER_FILES ${PROJECT_SOURCE_DIR}/*.hpp)
@@ -68,6 +67,7 @@ set(PIP_EXECUTABLE ${VENV_DIR}/bin/pip3)
 
 add_custom_command(OUTPUT ${VENV_DIR}
         COMMAND ${Python3_EXECUTABLE} -m venv ${VENV_DIR}
+        COMMAND ${PYTHON_EXECUTABLE} -m pip install --upgrade pip
         COMMAND ${PIP_EXECUTABLE} install wheel
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS ${PROJECT_NAME} ${SETUP_PY}
@@ -95,7 +95,8 @@ add_custom_target(Build${PROJECT_NAME}Package ALL
         COMMENT "Successfully build ${PROJECT_NAME} package")
 
 add_custom_target(Upload${PROJECT_NAME}Package ALL
-        COMMAND ${PYTHON_EXECUTABLE} -m twine upload -r testpypi .
+        COMMAND ${PYTHON_EXECUTABLE} -m pip install --upgrade twine
+        COMMAND ${PYTHON_EXECUTABLE} -m twine upload -r testpypi *
         DEPENDS ${PACKAGE_DIR}
         WORKING_DIRECTORY ${PACKAGE_DIR}
         COMMENT "Successfully uploaded ${PROJECT_NAME} package")

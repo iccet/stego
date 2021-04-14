@@ -1,13 +1,13 @@
 name: Tests
 
 on:
+  workflow_dispatch:
   push:
+    branches-ignore:
+      - cs/*
+      - py/*
   pull_request:
     types: [opened, reopened]
-
-defaults:
-  run:
-    shell: bash
 
 env:
   BUILD_TYPE: Release
@@ -38,6 +38,10 @@ jobs:
         with:
           boost_version: 1.73.0
 
+      - name: Install boost dev packages
+        run: |
+          sudo apt-get install libboost-python-dev -y
+
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
         with:
@@ -46,7 +50,10 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
+          python-version: 3.9
+
+      - name: Install Virtualenv
+        uses: syphar/restore-virtualenv@v1
 
       - name: Create Build Environment
         run: cmake -E make_directory ${{github.workspace}}/build
