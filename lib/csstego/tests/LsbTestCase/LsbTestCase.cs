@@ -42,11 +42,11 @@ namespace LsbTestCase
             using var stream = new MemoryStream();
             
             bitmap.Save(stream, ImageFormat.Png);
-            var random = stream.ToArray();
+            var bytes = stream.ToArray();
             
-            fixed (byte* p = random)
+            fixed (byte* p = bytes)
             {
-                Assert.True(Lsb.Encode(Data, p, random.Length));
+                Assert.True(Lsb.Encode(Data, p, bytes.Length));
             }
         }
     }
