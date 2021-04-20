@@ -4,6 +4,8 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <IsPackable>false</IsPackable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+        <LibraryPath>/home/kupns/Development/cpp/stego/lib/csstego/bin/Debug/netcoreapp3.1;$(IncludePath)</LibraryPath>
     </PropertyGroup>
 
     <ItemGroup>

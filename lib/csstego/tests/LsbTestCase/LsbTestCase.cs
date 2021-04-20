@@ -3,6 +3,7 @@ using System.Collections;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using CsStg;
 using Xunit;
@@ -49,5 +50,19 @@ namespace LsbTestCase
                 Assert.True(Lsb.Encode(Data, p, bytes.Length));
             }
         }
+
+        [Fact]
+        public void DecodeBytesTest()
+        {
+            var bytes = new byte[100];
+            _crypto.GetBytes(bytes);
+            
+            fixed (byte* p = bytes)
+            {
+                Assert.True(Lsb.Decode(p, bytes.Length, out var data));
+                Assert.Equal(Data, Marshal.PtrToStringUTF8(data));
+            }
+        }
+        
     }
 }

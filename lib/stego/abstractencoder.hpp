@@ -32,6 +32,8 @@ namespace Stg
          */
         virtual bool encode(QString data, uchar *container, int size);
 
+        virtual bool encode(const char *data, uchar *container, int size);
+
         /**
          * Decode a raw data.
          *

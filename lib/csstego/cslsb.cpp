@@ -1,13 +1,15 @@
 #include "cslsb.hpp"
 
-bool Encode(const char *data, char *container, int64_t size)
+bool Encode(const char *data, uchar *container, int32_t size)
 {
-    BOOST_LOG_TRIVIAL(debug) << data << container << size;
     return true;
+    return Lsb().Base::encode(data, container, size);
 }
+const static char * test = "test";
 
-const char *Decode(char *container, int64_t size)
+bool Decode(const uchar *container, int32_t size, const char *&data)
 {
-    BOOST_LOG_TRIVIAL(debug) << size << container;
-    return "test";
+    data = test;
+    return true;
+//    return Lsb().Base::decode(container, size);
 }

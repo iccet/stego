@@ -2,16 +2,19 @@
 #define CSSTG_LIBRARY_H
 
 #include <cstdint>
+#include <boost/log/trivial.hpp>
 
 #include "csstg_export.h"
-#include <boost/log/trivial.hpp>
+#include "lsb.hpp"
+
+using namespace Stg;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-bool CSSTG_EXPORT Encode(const char *data, char *container, int64_t size);
-const char *CSSTG_EXPORT Decode(char *container, int64_t size);
+bool CSSTG_EXPORT Encode(const char *data, uchar *container, int32_t size);
+bool CSSTG_EXPORT Decode(const uchar *container, int32_t size, const char *&data);
 
 #ifdef __cplusplus
 }
