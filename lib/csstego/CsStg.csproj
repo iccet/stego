@@ -10,6 +10,16 @@
             $(BuildDependsOn);
         </BuildDependsOn>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <ItemDefinitionGroup>
+            <ClCompile>
+                <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+                <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+            </ClCompile>
+            <Link>
+                <AdditionalLibraryDirectories>/usr/lib/x86_64-linux-gnu/;$(OutputPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+                <AdditionalDependencies>libCsStg.so;%(AdditionalDependencies)</AdditionalDependencies>
+            </Link>
+        </ItemDefinitionGroup>
     </PropertyGroup>
     
     <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
@@ -17,9 +27,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
-      <PackageReference Include="xunit.assert" Version="2.4.0" />
-      <PackageReference Include="xunit.extensibility.core" Version="2.4.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+        <PackageReference Include="xunit.assert" Version="2.4.0" />
+        <PackageReference Include="xunit.extensibility.core" Version="2.4.0" />
         <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
     </ItemGroup>
 

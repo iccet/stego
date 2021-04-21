@@ -14,7 +14,7 @@ extern "C" {
 #endif
 
 bool CSSTG_EXPORT Encode(const char *data, uchar *container, int32_t size);
-bool CSSTG_EXPORT Decode(const uchar *container, int32_t size, const char *&data);
+int32_t CSSTG_EXPORT Decode(const uchar *container, int32_t size, const char *&data);
 
 #ifdef __cplusplus
 }

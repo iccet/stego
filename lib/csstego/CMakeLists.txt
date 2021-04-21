@@ -24,6 +24,11 @@ set(PROJECT_SOURCES
     ${SOURCE_FILES}
     ${HEADER_FILES})
 
+get_target_property(QtCore_location Qt5::Core LOCATION)
+get_target_property(QtGui_location Qt5::Gui LOCATION)
+
+file(COPY ${QtCore_location} ${QtGui_location} DESTINATION ${PROJECT_BINARY_DIR})
+
 add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCES})
 target_link_libraries(${PROJECT_NAME} PRIVATE Stg
     Qt${QT_VERSION_MAJOR}::Core Qt5::Gui)

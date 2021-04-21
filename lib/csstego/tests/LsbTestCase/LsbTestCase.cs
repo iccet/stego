@@ -1,8 +1,7 @@
-using System;
-using System.Collections;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using CsStg;
@@ -11,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace LsbTestCase
 {
-    public unsafe class LsbTestCase
+    public class LsbTestCase
     {
         private readonly ITestOutputHelper _output;
         private readonly RNGCryptoServiceProvider _crypto;
@@ -26,42 +25,38 @@ namespace LsbTestCase
         [Fact]
         public void EncodeBytesTest()
         {
-            var random = new byte[100];
-            _crypto.GetBytes(random);
+            var bytes = new byte[1000];
+            _crypto.GetBytes(bytes);
+            var oldBytes = (byte[])bytes.Clone();
             
-            fixed (byte* p = random)
-            {
-                Assert.True(Lsb.Encode(Data, p, random.Length));
-            }
+            Assert.Equal(bytes.Length, oldBytes.Length);
+
+            Assert.True(Lsb.Encode(Data, bytes));
+            Assert.False(oldBytes.SequenceEqual(bytes));
         }
         
         [Fact]
         public void EncodeImageTest()
         {
-            var bitmap = new Bitmap(10, 10);
+            var bitmap = new Bitmap(100, 100);
 
             using var stream = new MemoryStream();
             
             bitmap.Save(stream, ImageFormat.Png);
             var bytes = stream.ToArray();
             
-            fixed (byte* p = bytes)
-            {
-                Assert.True(Lsb.Encode(Data, p, bytes.Length));
-            }
+            Assert.True(Lsb.Encode(Data, bytes));
         }
 
         [Fact]
         public void DecodeBytesTest()
         {
-            var bytes = new byte[100];
+            var bytes = new byte[1000];
             _crypto.GetBytes(bytes);
             
-            fixed (byte* p = bytes)
-            {
-                Assert.True(Lsb.Decode(p, bytes.Length, out var data));
-                Assert.Equal(Data, Marshal.PtrToStringUTF8(data));
-            }
+            Assert.True(Lsb.Encode(Data, bytes));
+            
+            Assert.Equal(Data, Lsb.Decode(bytes));
         }
         
     }
