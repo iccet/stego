@@ -16,7 +16,6 @@ namespace CsStg
     ;
 
         [DllImport(CsStgLib, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
-        [return: MarshalAs(UnmanagedType.Bool)]
         private static extern unsafe bool Encode(string data, byte *container, int size);
         
         [DllImport(CsStgLib, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
@@ -27,8 +26,7 @@ namespace CsStg
             fixed (byte* p = container)
             {
                 var length = Decode(p, container.Length, out var data);
-                Debug.Assert(length > 0);
-                return Marshal.PtrToStringUTF8(data, length);
+                return Marshal.PtrToStringAnsi(data, length);
             }
         }
 

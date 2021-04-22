@@ -18,6 +18,12 @@
         <None Update="*.jpg;*.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        
+        <ContentWithTargetPath Include="SharedData.resx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>SharedData.resx</TargetPath>
+        </ContentWithTargetPath>
+
     </ItemGroup>
 
 </Project>
