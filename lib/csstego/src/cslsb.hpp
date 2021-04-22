@@ -6,6 +6,7 @@
 
 #include "csstg_export.h"
 #include "lsb.hpp"
+#include "stg.hpp"
 
 using namespace Stg;
 
@@ -13,8 +14,8 @@ using namespace Stg;
 extern "C" {
 #endif
 
-bool CSSTG_EXPORT Encode(const char *data, uchar *container, int32_t size);
-int32_t CSSTG_EXPORT Decode(const uchar *container, int32_t size, const char *&data);
+bool CSSTG_EXPORT LsbEncode(const char *data, uchar *container, int32_t size);
+int32_t CSSTG_EXPORT LsbDecode(const uchar *container, int32_t size, const char *&data);
 
 #ifdef __cplusplus
 }

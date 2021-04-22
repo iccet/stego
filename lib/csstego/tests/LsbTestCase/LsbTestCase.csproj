@@ -27,7 +27,8 @@
     </ItemGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\..\CsStg.csproj" />
+        <ProjectReference Include="..\..\..\..\tests\shared_data\SharedData.csproj" />
+        <ProjectReference Include="..\..\src\CsStg.csproj" />
     </ItemGroup>
 
 </Project>

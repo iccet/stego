@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <Cmake>cmake</Cmake>
-        <CsStgDir>csstego</CsStgDir>
-        <LibsDir>$(MSBuildProjectDirectory)/..</LibsDir>
+        <CsStgDir>csstego/src</CsStgDir>
+        <LibsDir>$(MSBuildProjectDirectory)/../..</LibsDir>
         <BuildDependsOn>
             BuildCsStgExtension;
             $(BuildDependsOn);

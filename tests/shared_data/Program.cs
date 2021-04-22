@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace SharedDataGenerator
+namespace SharedData
 {
     class Program
     {
@@ -34,7 +34,7 @@ namespace SharedDataGenerator
                     new XElement("value", value)));
             }
             
-            res.Save(fileName);
+            res.Save(string.Join('.', Name, "Generated", "resx"));
 
         }
     }
