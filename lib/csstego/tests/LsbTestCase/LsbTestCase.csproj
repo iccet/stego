@@ -4,17 +4,6 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <IsPackable>false</IsPackable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-
-        <ItemDefinitionGroup>
-            <ClCompile>
-                <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-                <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
-            </ClCompile>
-            <Link>
-                <AdditionalLibraryDirectories>/usr/lib/x86_64-linux-gnu/;$(OutputPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-                <AdditionalDependencies>libCsStg.so;%(AdditionalDependencies)</AdditionalDependencies>
-            </Link>
-        </ItemDefinitionGroup>
     </PropertyGroup>
 
     <ItemGroup>

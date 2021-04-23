@@ -3,13 +3,15 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <Cmake>cmake</Cmake>
-        <CsStgDir>csstego/src</CsStgDir>
+        <CsStgDir>csstego</CsStgDir>
         <LibsDir>$(MSBuildProjectDirectory)/../..</LibsDir>
         <BuildDependsOn>
             BuildCsStgExtension;
             $(BuildDependsOn);
         </BuildDependsOn>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        
         <ItemDefinitionGroup>
             <ClCompile>
                 <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -33,11 +35,11 @@
         <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
     </ItemGroup>
 
-    <Target Name="BuildCsStgExtension" Outputs="$(OutputPath)/lib$(MSBuildProjectName)" BeforeTargets="Build">
-        <Message Text="Building $(MSBuildProjectName) extension" Importance="high" />
+    <Target Name="BuildCsStgExtension" Outputs="$(OutputPath)/lib$(MSBuildProjectName).*" BeforeTargets="Build">
+        <Message Text="Building $(MSBuildProjectName) extension" Importance="normal" />
         
         <Exec Command="$(Cmake) -DCMAKE_INSTALL_PREFIX=$([System.IO.Path]::GetFullPath('$(OutputPath)')) $(LibsDir)" WorkingDirectory="$(OutputPath)" />
-        <Exec Command="$(Cmake) --build $(CsStgDir) --target $(MSBuildProjectName)" WorkingDirectory="$(OutputPath)" />
+        <Exec Command="$(Cmake) --build $(CsStgDir) --target $(MSBuildProjectName) --config $(Configuration)" WorkingDirectory="$(OutputPath)" />
         <Exec Command="$(Cmake) --install $(CsStgDir)" WorkingDirectory="$(OutputPath)" />
 
     </Target>
