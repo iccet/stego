@@ -24,16 +24,19 @@ set(PROJECT_SOURCES
     ${SOURCE_FILES}
     ${HEADER_FILES})
 
-get_target_property(QtCore_location Qt5::Core LOCATION)
-get_target_property(QtGui_location Qt5::Gui LOCATION)
-
-file(COPY ${QtCore_location} ${QtGui_location} DESTINATION ${PROJECT_BINARY_DIR})
-
 add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCES})
 target_link_libraries(${PROJECT_NAME} PRIVATE Stg
     Qt${QT_VERSION_MAJOR}::Core Qt5::Gui)
 
 generate_export_header(${PROJECT_NAME})
 
-install(TARGETS ${PROJECT_NAME} Stg
-        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX})
+get_target_property(CsStg_LINKED_LIBRARIES ${PROJECT_NAME} LINK_LIBRARIES)
+list(APPEND CsStg_LINKED_LIBRARIES ${PROJECT_NAME})
+
+set(DEPS_FILE ${PROJECT_BINARY_DIR}/deps.txt)
+
+list(JOIN CsStg_LINKED_LIBRARIES ">\n$<TARGET_FILE:" CsStg_LINKED_LIBRARIES)
+set(CsStg_LINKED_LIBRARIES "$<TARGET_FILE:${CsStg_LINKED_LIBRARIES}>")
+
+file(GENERATE OUTPUT ${DEPS_FILE}
+    CONTENT $<GENEX_EVAL:${CsStg_LINKED_LIBRARIES}>)

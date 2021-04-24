@@ -1,27 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <Cmake>cmake</Cmake>
-        <CsStgDir>csstego</CsStgDir>
-        <LibsDir>$(MSBuildProjectDirectory)/../..</LibsDir>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageLicenseFile>../LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>../README.md</PackageReadmeFile>
+        <Version>0.0.1</Version>
         <BuildDependsOn>
             BuildCsStgExtension;
             $(BuildDependsOn);
         </BuildDependsOn>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        
-        <ItemDefinitionGroup>
-            <ClCompile>
-                <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-                <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
-            </ClCompile>
-            <Link>
-                <AdditionalLibraryDirectories>/usr/lib/x86_64-linux-gnu/;$(OutputPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-                <AdditionalDependencies>libCsStg.so;%(AdditionalDependencies)</AdditionalDependencies>
-            </Link>
-        </ItemDefinitionGroup>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Cmake>cmake</Cmake>
+        <CsStgDir>csstego</CsStgDir>
+        <DepsFIle>$(CsStgDir)/deps.txt</DepsFIle>
+        <StgProjectDir>$(MSBuildProjectDirectory)/../..</StgProjectDir>
     </PropertyGroup>
     
     <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
@@ -35,13 +30,20 @@
         <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
     </ItemGroup>
 
-    <Target Name="BuildCsStgExtension" Outputs="$(OutputPath)/lib$(MSBuildProjectName).*" BeforeTargets="Build">
+    <Target Name="BuildCsStgExtension" Outputs="$(OutputPath)$(DepsFile)" BeforeTargets="Build">
         <Message Text="Building $(MSBuildProjectName) extension" Importance="normal" />
         
-        <Exec Command="$(Cmake) -DCMAKE_INSTALL_PREFIX=$([System.IO.Path]::GetFullPath('$(OutputPath)')) $(LibsDir)" WorkingDirectory="$(OutputPath)" />
+        <Exec Command="$(Cmake) -DCMAKE_INSTALL_PREFIX=$([System.IO.Path]::GetFullPath('$(OutputPath)')) $(StgProjectDir)" WorkingDirectory="$(OutputPath)" />
         <Exec Command="$(Cmake) --build $(CsStgDir) --target $(MSBuildProjectName) --config $(Configuration)" WorkingDirectory="$(OutputPath)" />
-        <Exec Command="$(Cmake) --install $(CsStgDir)" WorkingDirectory="$(OutputPath)" />
 
+    </Target>
+
+    <Target Name="CopyDependencies" AfterTargets="BuildCsStgExtension">
+        <ReadLinesFromFile File="$(OutputPath)/$(DepsFile)">
+            <Output TaskParameter="Lines" ItemName="Deps" />
+        </ReadLinesFromFile>
+
+        <Copy SourceFiles="@(Deps)" DestinationFolder="$(OutputPath)"/>
     </Target>
 
 </Project>
