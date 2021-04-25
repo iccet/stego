@@ -57,6 +57,6 @@ namespace Stg
         It _i;
         Range _range;
     };
-} // namespace Stg::Internal
+} // namespace Stg
 
 #endif //CONST_CROSS_ITERATOR_HPP

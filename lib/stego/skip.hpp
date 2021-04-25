@@ -41,6 +41,6 @@ namespace Stg
         size_t _s;
         It _i;
     };
-} // namespace Stg::Internal
+} // namespace Stg
 
 #endif //CONST_SKIP_ITERATOR_HPP

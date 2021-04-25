@@ -8,10 +8,10 @@ namespace Stg
         if(!encode(data, bytes)) return 0;
 
         int i = 0;
-                foreach(auto byte, bytes)
-            {
-                container[i++] = byte;
-            }
+        foreach(auto byte, bytes)
+        {
+            container[i++] = byte;
+        }
 
         return 1;
     }
