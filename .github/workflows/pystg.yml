@@ -1,18 +1,37 @@
-name: Tests
+name: PyStg
 
 on:
   workflow_dispatch:
   push:
-    branches-ignore:
-      - cs/*
+    branches:
       - py/*
   pull_request:
     types: [opened, reopened]
+
+defaults:
+  run:
+    shell: bash
 
 env:
   BUILD_TYPE: Release
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Lint with flake8
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude cmake*,venv
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude cmake*,venv
+
   build:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -52,11 +71,11 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: Install Virtualenv
-        uses: syphar/restore-virtualenv@v1
-
       - name: Create Build Environment
         run: cmake -E make_directory ${{github.workspace}}/build
+
+      - name: Install Virtualenv
+        uses: syphar/restore-virtualenv@v1
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}/build

@@ -18,5 +18,5 @@ add_executable(${PROJECT_NAME} tst_lsbrawdecodingtestcase.cpp)
 
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Test Qt5::Core Qt5::Gui SharedData libstego)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Test Qt5::Core Qt5::Gui SharedData Stg)
 

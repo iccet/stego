@@ -3,6 +3,8 @@
 #include "stego/abstractencoder.hpp"
 #include "stego/lsb.hpp"
 
+using namespace Stg;
+
 class LsbRawDecodingTestCase : public QObject
 {
     Q_OBJECT

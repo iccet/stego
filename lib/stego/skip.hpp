@@ -1,43 +1,46 @@
 
-#ifndef STEGO_SKIP_HPP
-#define STEGO_SKIP_HPP
+#ifndef CONST_SKIP_ITERATOR_HPP
+#define CONST_SKIP_ITERATOR_HPP
 
 #include <iterator>
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/assert.hpp>
 
-template<typename _InputIterator,
-        typename __T = typename std::iterator_traits<_InputIterator>::value_type>
-struct ConstSkipIterator : public boost::iterator_facade<ConstSkipIterator<_InputIterator>, __T const, boost::forward_traversal_tag>
+namespace Stg
 {
-    using It = _InputIterator;
-
-    constexpr ConstSkipIterator(It i) : _i(i), _s(SIZE_MAX) { }
-
-    ConstSkipIterator(size_t s, It i) : _i(i), _s(s)
+    template<typename _InputIterator,
+        typename __T = typename std::iterator_traits<_InputIterator>::value_type>
+    struct ConstSkipIterator : public boost::iterator_facade<ConstSkipIterator<_InputIterator>, __T const, boost::forward_traversal_tag>
     {
-        BOOST_ASSERT_MSG(_s, "Infinite cycle detected");
-    }
+        using It = _InputIterator;
 
-    void increment()
-    {
-        std::advance(_i, _s);
-    }
+        constexpr ConstSkipIterator(It i) : _i(i), _s(SIZE_MAX) { }
 
-    __T const& dereference() const
-    {
-        return *_i;
-    }
+        ConstSkipIterator(size_t s, It i) : _i(i), _s(s)
+        {
+            BOOST_ASSERT_MSG(_s, "Infinite cycle detected");
+        }
 
-    bool equal(ConstSkipIterator o) const
-    {
-        if(std::distance(_i, o._i) < 0) return true;
-        return _i == o._i;
-    }
+        void increment()
+        {
+            std::advance(_i, _s);
+        }
 
-private:
-    size_t _s;
-    It _i;
-};
+        __T const& dereference() const
+        {
+            return *_i;
+        }
 
-#endif //STEGO_SKIP_HPP
+        bool equal(ConstSkipIterator o) const
+        {
+            if(std::distance(_i, o._i) < 0) return true;
+            return _i == o._i;
+        }
+
+    private:
+        size_t _s;
+        It _i;
+    };
+} // namespace Stg
+
+#endif //CONST_SKIP_ITERATOR_HPP

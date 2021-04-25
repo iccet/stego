@@ -3,6 +3,8 @@
 #include "stego/abstractencoder.hpp"
 #include "stego/kutter.hpp"
 
+using namespace Stg;
+
 class KutterEncodingTestCase : public QObject
 {
     Q_OBJECT
@@ -19,7 +21,7 @@ private slots:
 
     void init();
 
-    void encodingTestCase_data();
+    [[maybe_unused]] void encodingTestCase_data();
     void encodingTestCase();
 
     void cleanupTestCase();

@@ -2,6 +2,8 @@
 
 #include "stego/skip.hpp"
 
+using namespace Stg;
+
 class ConstSkipIteratorTestCase : public QObject
 {
     Q_OBJECT

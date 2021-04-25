@@ -2,6 +2,8 @@
 
 #include "stego/cross.hpp"
 
+using namespace Stg;
+
 class CrossIteratorTestCase : public QObject
 {
     Q_OBJECT

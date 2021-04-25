@@ -9,15 +9,19 @@
 
 #include "skip.hpp"
 
-/**
- * @href https://wiki.qt.io/Working_with_Raw_Data
- */
-QBitArray toBitArray(const QByteArray &array);
-QByteArray toByteArray(const QBitArray &array);
+namespace Stg
+{
+    /**
+     * @href https://wiki.qt.io/Working_with_Raw_Data
+     */
+    QBitArray toBitArray(const QByteArray &array);
+    QByteArray toByteArray(const QBitArray &array);
 
-char changeBit(char byte, bool bit, int position = 0);
+    char changeBit(char byte, bool bit, int position = 0);
 
-void copy(const QByteArray &src, QByteArray &dst);
-QVector<QVector<QByteArray::value_type>> copy(const QByteArray &src, int w);
+    void copy(const QByteArray &src, QByteArray &dst);
+    QVector<QVector<QByteArray::value_type>> copy(const QByteArray &src, int w);
+
+} // namespace Stg
 
 #endif // BITS_HPP

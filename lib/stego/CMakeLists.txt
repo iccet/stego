@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(LibStego LANGUAGES CXX)
-
-string(TOLOWER ${PROJECT_NAME} LIB_NAME)
+project(Stg LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
@@ -22,12 +20,10 @@ set(PROJECT_SOURCES
     ${SOURCE_FILES}
     ${HEADER_FILES})
 
-add_library(${LIB_NAME} STATIC ${PROJECT_SOURCES})
+add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCES})
 
-target_link_libraries(${LIB_NAME}
+target_link_libraries(${PROJECT_NAME}
         PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt5::Gui
         Boost::program_options PUBLIC Boost::log Boost::log_setup)
 
-target_link_libraries(${LIB_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt5::Gui)
-
-target_compile_definitions(${LIB_NAME} PRIVATE LIBSTEGO_LIBRARY)
+target_compile_definitions(${PROJECT_NAME} PRIVATE STG_LIBRARY)
