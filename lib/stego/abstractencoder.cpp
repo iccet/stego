@@ -22,4 +22,9 @@ namespace Stg
         return decode(bytes);
     }
 
+    bool AbstractEncoder::encode(const char *data, uchar *container, int size)
+    {
+        return encode(QString(data), container, size);
+    }
+
 } // namespace PyStg

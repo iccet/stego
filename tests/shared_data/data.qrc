@@ -1,9 +1,13 @@
 <RCC>
     <qresource prefix="/jpg">
-        <file>1.jpg</file>
-        <file>2.jpg</file>
+        <file>5452997.jpg</file>
+        <file>9865245.jpg</file>
     </qresource>
     <qresource prefix="/txt">
         <file>regular.txt</file>
+    </qresource>
+    <qresource prefix="/png">
+        <file>5559527.png</file>
+        <file>2639843.png</file>
     </qresource>
 </RCC>

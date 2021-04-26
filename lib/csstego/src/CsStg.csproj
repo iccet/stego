@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageLicenseFile>../LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>../README.md</PackageReadmeFile>
+        <Version>0.0.1</Version>
+        <BuildDependsOn>
+            BuildCsStgExtension;
+            $(BuildDependsOn);
+        </BuildDependsOn>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Cmake>cmake</Cmake>
+        <CsStgDir>csstego</CsStgDir>
+        <DepsFIle>$(CsStgDir)/deps.txt</DepsFIle>
+        <StgProjectDir>$(MSBuildProjectDirectory)/../..</StgProjectDir>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+        <DefineConstants>WINDOWS</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+        <PackageReference Include="xunit.assert" Version="2.4.0" />
+        <PackageReference Include="xunit.extensibility.core" Version="2.4.0" />
+        <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+    </ItemGroup>
+
+    <Target Name="BuildCsStgExtension" Outputs="$(OutputPath)$(DepsFile)" BeforeTargets="Build">
+        <Message Text="Building $(MSBuildProjectName) extension" Importance="normal" />
+        
+        <Exec Command="$(Cmake) -DCMAKE_INSTALL_PREFIX=$([System.IO.Path]::GetFullPath('$(OutputPath)')) $(StgProjectDir)" WorkingDirectory="$(OutputPath)" />
+        <Exec Command="$(Cmake) --build $(CsStgDir) --target $(MSBuildProjectName) --config $(Configuration)" WorkingDirectory="$(OutputPath)" />
+
+    </Target>
+
+    <Target Name="CopyDependencies" AfterTargets="BuildCsStgExtension">
+        <ReadLinesFromFile File="$(OutputPath)/$(DepsFile)">
+            <Output TaskParameter="Lines" ItemName="Deps" />
+        </ReadLinesFromFile>
+
+        <Copy SourceFiles="@(Deps)" DestinationFolder="$(OutputPath)"/>
+    </Target>
+
+</Project>
